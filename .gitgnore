@@ -298,4 +298,7 @@ pyrightconfig.json
 pyvenv.cfg
 pip-selfcheck.json
 
+# Response file extension
+*.dat
+
 # End of https://www.toptal.com/developers/gitignore/api/python,venv,pycharm

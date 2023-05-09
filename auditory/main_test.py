@@ -1,9 +1,14 @@
 from machine import Pin, PWM
 from time import sleep
 from random import randint, choice
+import utime
+
+from utils.utils import reaction_time, save_data
 
 
 def main_auditory_test():
+    results = []
+
     low_frequency = 330
     high_frequency = 990
 
@@ -14,15 +19,22 @@ def main_auditory_test():
     low_group = [push_button_low, low_frequency]
     high_group = [push_button_high, high_frequency]
 
-    for i in range(0, 5):
+    for i in range(0, 8):
         choice_group = choice([low_group, high_group])
         beeper.freq(choice_group[1])
         sleep(randint(3, 7))
+        start_time = utime.ticks_ms()
         beeper.duty(512)
 
         while True:
             logic_state = choice_group[0].value()
 
             if logic_state:
+                end_time = utime.ticks_ms()
                 beeper.duty(0)
+                results.append(reaction_time(start_time, end_time))
                 break
+
+    save_data('auditory_test.dat', results)
+
+    return
