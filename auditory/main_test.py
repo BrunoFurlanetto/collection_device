@@ -6,18 +6,15 @@ import utime
 from utils.utils import reaction_time, save_data
 
 
-def main_auditory_test():
-    results = []
-
+def auditory_choice_test():
     low_frequency = 330
     high_frequency = 990
-
     beeper = PWM(Pin(19, Pin.OUT), duty=0)
     push_button_low = Pin(21, Pin.IN)
     push_button_high = Pin(23, Pin.IN)
-
     low_group = [push_button_low, low_frequency]
     high_group = [push_button_high, high_frequency]
+    results = []
 
     for i in range(0, 8):
         choice_group = choice([low_group, high_group])
@@ -35,6 +32,6 @@ def main_auditory_test():
                 results.append(reaction_time(start_time, end_time))
                 break
 
-    save_data('auditory_test.dat', results)
+    save_data('auditory_choice_test.dat', results)
 
     return
