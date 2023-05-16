@@ -1,0 +1,76 @@
+import sys
+
+from auditory.main_test import auditory_choice_test, auditory_simple_test
+from tactile.main_test import tactile_choice_test, tactile_simple_test
+from visual.main_test import visual_choice_test, visual_simple_test
+
+
+def init():
+    while True:
+        print('=' * 100)
+        print('Versão 1.0 do protótipo de dispositivo para captação do tempo de reação simples e de escolha')
+        print('=' * 100)
+
+        while True:
+            print('Qual tipo de teste deseja iniciar? 1 - TR simples, 2 - TR de escolha, 0 - Sair')
+            type_test = input().strip()
+
+            try:
+                type_test = int(type_test)
+            except ValueError:
+                print('O valor digitado não é uma opção válida!')
+            else:
+                if type_test in [0, 1, 2]:
+                    break
+                else:
+                    print('Selecione uma opção válida, 1 ou 2!!')
+
+        print('=' * 100)
+
+        if int(type_test) == 0:
+            print('Testes finalizados!!')
+
+            break
+
+        while True:
+            print('Forneça a opção de teste que deseja iniciar: 1 - Visual, 2 - Auditivo, 3 - Tátil, 0 - Finalizar')
+            option_test = input().strip()
+
+            try:
+                option_test = int(option_test)
+            except ValueError:
+                print('O valor digitado não é uma opção válida!')
+            else:
+                if option_test in [0, 1, 2, 3]:
+                    break
+                else:
+                    print('Selecione uma opção válida, de 0 a 3 apenas!!')
+
+        print('=' * 100)
+
+        if option_test == 0:
+            print('Testes finalizados!!')
+            sys.exit()  # TODO: Verify if work
+
+            break
+        if option_test == 1:
+            if type_test == 1:
+                print('Teste de tempo de reação simples visual iniciado!!')
+                visual_simple_test()
+            else:
+                print('Teste de tempo de reação de escolha visual iniciado!!')
+                visual_choice_test()
+        if option_test == 2:
+            if type_test == 1:
+                print('Teste de tempo de reação simples auditivo de iniciado!!')
+                auditory_simple_test()
+            else:
+                print('Teste de tempo de reação de esolha auditivo iniciado!!')
+                auditory_choice_test()
+        if int(option_test) == 3:
+            if type_test == 1:
+                print('Teste de tempo de reação simples tátil iniciado!!')
+                tactile_simple_test()
+            else:
+                print('Teste de tempo de reação de escolha tátil iniciado!!')
+                tactile_choice_test()
