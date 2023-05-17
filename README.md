@@ -4,6 +4,8 @@ This is a design of a simple and choice reaction time collection device,
 that uses visual, sound and auditory stimuli. The project is based on the library
 microPython and is designed to work with the ESP32 microcontroller.
 
+To read this page in Portuguese [click here](https://github.com/BrunoFurlanetto/collection_device/blob/main/README-pt.md).
+
 ## Functionalities
 
 The reaction time collection device allows you to measure the reaction time of a
