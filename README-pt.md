@@ -4,6 +4,8 @@ Este é um projeto de um dispositivo de coleta de tempo de reação simples e de
 que utiliza estímulos visuais, sonoros e auditivos. O projeto é baseado na biblioteca
 microPython e é projetado para funcionar com o microcontrolador ESP32.
 
+Para ler está página em inglês, [clique aqui](https://github.com/BrunoFurlanetto/collection_device/blob/main/README.md).
+
 ## Funcionalidades
 
 O dispositivo de coleta de tempo de reação permite medir o tempo de reação de um
