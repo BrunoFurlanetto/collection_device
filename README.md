@@ -1,107 +1,107 @@
-# Dispositivo de Coleta de Tempo de Reação
+# Reaction Time Collection Device
 
-Este é um projeto de um dispositivo de coleta de tempo de reação simples e de escolha,
-que utiliza estímulos visuais, sonoros e auditivos. O projeto é baseado na biblioteca
-microPython e é projetado para funcionar com o microcontrolador ESP32.
+This is a design of a simple and choice reaction time collection device,
+that uses visual, sound and auditory stimuli. The project is based on the library
+microPython and is designed to work with the ESP32 microcontroller.
 
-## Funcionalidades
+## Functionalities
 
-O dispositivo de coleta de tempo de reação permite medir o tempo de reação de um
-usuário em resposta a diferentes estímulos. Ele fornece três tipos de estímulos: 
-visual, sonoro e auditivo. O usuário deve reagir o mais rápido possível
-quando o estímulo é apresentado e o dispositivo registra o tempo de reação.
+The reaction time collection device allows you to measure the reaction time of a
+user in response to different stimuli. It provides three types of stimuli:
+visual, sound and auditory. The user must react as quickly as possible
+when the stimulus is presented and the device records the reaction time.
 
-## Pré-requisitos
+## Prerequisites
 
-- Microcontrolador ESP32
-- Conexão com o computador para programação
-- Ambiente Python com microPython instalado
-- Acesso à internet para baixar dependências
+- ESP32 microcontroller
+- Connection to computer for programming
+- Python environment with microPython installed
+- Internet access to download dependencies
 
-## Instalação
+## Installation
 
-1. Clone este repositório em sua máquina local:
+1. Clone this repository on your local machine:
 
-   ```
-   git clone https://github.com/BrunoFurlanetto/collection_device.git
-   ```
+    ```
+    git clone https://github.com/BrunoFurlanetto/collection_device.git
+    ```
 
-2. Acesse o diretório do projeto:
+2. Access the project directory:
 
-   ```
-   cd dispositivo-coleta-tempo-reacao
-   ```
+    ```
+    cd device-collection-time-reaction
+    ```
 
-3. Crie um ambiente virtual utilizando a ferramenta `venv`:
+3. Create a virtual environment using the `venv` tool:
 
-   ```
-   python -m venv venv
-   ```
+    ```
+    python -m venv venv
+    ```
 
-4. Ative o ambiente virtual:
+4. Activate the virtual environment:
 
-    - No Windows:
+     - On Windows:
 
-      ```
-      venv\Scripts\activate.bat
-      ```
+       ```
+       venv\Scripts\activate.bat
+       ```
 
-    - No Linux/macOS:
+     - On Linux/macOS:
 
-      ```
-      source venv/bin/activate
-      ```
+       ```
+       source venv/bin/activate
+       ```
 
-5. Instale as dependências do projeto:
+5. Install the project's dependencies:
 
-   ```
-   pip install -r requirements.txt
-   ```
+    ```
+    pip install -r requirements.txt
+    ```
 
-6. Limpe o flash do ESP32:
+6. Clear the ESP32 flash:
 
-    - Conecte o ESP32 ao computador via USB. Se certifique que o cabo USB também tenha
-       capacidade de transmissão de dads.
-    - Abra um terminal e execute o seguinte comando:
+     - Connect the ESP32 to the computer via USB. Make sure the USB cable also has
+        data transmission capability.
+     - Open a terminal and run the following command:
 
-      ```
-      esptool.py --chip esp32 --port /dev/ttyUSB0 erase_flash
-      ```
+       ```
+       esptool.py --chip esp32 --port /dev/ttyUSB0 erase_flash
+       ```
 
-      **Observação:** Substitua `/dev/ttyUSB0` pelo caminho adequado da porta serial 
-      do ESP32 no seu sistema.
+       **Note:** Replace `/dev/ttyUSB0` with the proper serial port path
+       ESP32 on your system.
 
-## Uso
+## Usage
 
-1. Conecte o ESP32 ao computador via USB.
+1. Connect the ESP32 to the computer via USB.
 
-2. Certifique-se de que o ambiente virtual esteja ativado:
+2. Make sure the virtual environment is enabled:
 
-    - No Windows:
+     - On Windows:
 
-      ```
-      venv\Scripts\activate.bat
-      ```
+       ```
+       venv\Scripts\activate.bat
+       ```
 
-    - No Linux/macOS:
+     - On Linux/macOS:
 
-      ```
-      source venv/bin/activate
-      ```
+       ```
+       source venv/bin/activate
+       ```
 
-3. Execute o programa principal e forneça a porta de comunicação com o ESP32:
+3. Run the main program and provide the communication port with the ESP32:
 
-   ```
-   python main.py
-   ```
+    ```
+    python main.py
+    ```
 
-4. Siga as instruções no terminal para interagir com o dispositivo de coleta de tempo 
-   de reação.
+4. Follow the instructions on the terminal to interact with the time collection device
+    of reaction.
 
-5. Para fazer se obter os arquivos de saída dos testes execute o arquivo `get_file.bat`
-    para o windowns e `get_file.sh` no linux. Forneça então o nome que deseja para os 
-    arquivos.
+5. To get the test output files, run the `get_file.bat` file
+     for windows and `get_file.sh` on linux. Then provide the name you want for the
+     files.
 
-## Licença
+## License
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
