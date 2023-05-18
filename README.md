@@ -97,12 +97,19 @@ when the stimulus is presented and the device records the reaction time.
     python main.py
     ```
 
-4. Follow the instructions on the terminal to interact with the time collection device
+4. Press `ctrl+B` and then run your command line in the REPL to start the protocol
+    collect:
+   
+    ````
+    execfile('/initial/initialization.py')
+    ````
+
+5. Follow the instructions on the terminal to interact with the time collection device
     of reaction.
 
-5. To get the test output files, run the `get_file.bat` file
-     for windows and `get_file.sh` on linux. Then provide the name you want for the
-     files.
+
+6. At the end, the name of the volunteer will be asked, so that the files of each test can be taken and
+    save locally already with his name.
 
 ## License
 

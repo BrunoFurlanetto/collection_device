@@ -97,12 +97,19 @@ quando o estímulo é apresentado e o dispositivo registra o tempo de reação.
    python main.py
    ```
 
-4. Siga as instruções no terminal para interagir com o dispositivo de coleta de tempo 
+4. Pressione `ctrl+B` e logo execute a seuinte linha de comando no REPL para iniciar o protocolo de 
+   coleta:
+   
+   ````
+   execfile('/initial/initialization.py')
+   ````
+
+5. Siga as instruções no terminal para interagir com o dispositivo de coleta de tempo 
    de reação.
 
-5. Para fazer se obter os arquivos de saída dos testes execute o arquivo `get_file.bat`
-    para o windowns e `get_file.sh` no linux. Forneça então o nome que deseja para os 
-    arquivos.
+
+6. Ao final, será pedido o nome do voluntário, para que se possa pegar os arquivos de cada teste e
+   salvar de forma local já com o nome dele.
 
 ## Licença
 
