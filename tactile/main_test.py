@@ -7,6 +7,17 @@ from utils.utils import reaction_time, save_data
 
 
 def tactile_choice_test():
+    """
+    8 stimuli are made at random, both in the time between stimuli and on the side of the stimuli. The volunteer must
+    press the designated button as quickly as possible.
+    --------------------------------------------------------------------------------------------------------------------
+    Function responsible for the tactile choice reaction time collection protocol. The protocol consists of providing a
+    tactile stimulus by vibrating the joysctick that will be in the volunteer's right or left hand randomly. In addition
+    to the choice of the side that will vibrate, the time between stimuli is also random, this to avoid the volunteer's
+    learning within the protocol. At the end the reaction time and the errors, both by choice and by omission are saved
+    in a file named 'tactile_choice_test.dat'. Errors are assigned a value of zero in the output file.
+    :return: The function has no return at the end
+    """
     left = Pin(18, Pin.OUT)
     rigth = Pin(22, Pin.OUT)
     push_button_left = Pin(21, Pin.IN)
@@ -47,6 +58,17 @@ def tactile_choice_test():
 
 
 def tactile_simple_test():
+    """
+    8 stimuli are made randomly in the time between stimuli. The volunteer is expected to press the designated
+    button as quickly as possible.
+    -----------------------------------------------------------------------------------------------------------
+    Function responsible for the simple tactile reaction time collection protocol. The protocol consists of
+    providing a tactile stimulus by vibrating the joysctick that will be in the volunteer's dominant hand. The
+    time between stimuli is randomly given from 3 to 7 seconds, this to avoid the volunteer learning within the
+    protocol. At the end the reaction time and the error (by omission) are saved in a file named
+    'tactile_simple_test.dat'. Errors are assigned a value of zero in the output file.
+    :return: The function has no return at the end
+    """
     rigth = Pin(22, Pin.OUT)
     push_button_rigth = Pin(23, Pin.IN)
     results = []

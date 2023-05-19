@@ -7,6 +7,16 @@ from utils.utils import reaction_time, save_data
 
 
 def auditory_choice_test():
+    """
+    8 stimuli are made at random, both in the time between stimuli and in the frequency of the stimuli, and the
+    volunteer must press the designated button as quickly as possible.
+    -----------------------------------------------------------------------------------------------------------
+    Function responsible for the auditory choice reaction time collection protocol. The protocol consists of
+    choosing two distinct frequencies, so that the volunteer can distinguish both and make the right choice when
+    the stimulus occurs. At the end, the reaction time and errors, both by choice and by omission, are saved in
+    a file named 'auditory_choice_test.dat'. Errors are assigned a value of zero.
+    :return: The function has no return at the end
+    """
     low_frequency = 330
     high_frequency = 1320
     beeper = PWM(Pin(19, Pin.OUT), duty=0)
@@ -48,6 +58,16 @@ def auditory_choice_test():
 
 
 def auditory_simple_test():
+    """
+    8 stimuli are made with a time interval between them at random, ranging from 3 to 7 seconds. The volunteer must
+    then press the button as quickly as possible.
+    -------------------------------------------------- ------------------------------------------------------------
+    Function responsible for the collection protocol of the auditory simple reaction time. The protocol consists of
+    issuing a sound stimulus for the volunteer to respond as quickly as possible by pressing the designated button.
+    At the end, the volunteer's reaction time and errors (by omission) are saved in a file named
+    'auditory_simples_test.dat'. Errors are assigned a value of zero.
+    :return: The function has no return at the end
+    """
     high_frequency = 1320
     beeper = PWM(Pin(19, Pin.OUT), duty=0)
     push_button_high = Pin(23, Pin.IN)

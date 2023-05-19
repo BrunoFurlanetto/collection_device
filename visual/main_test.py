@@ -7,6 +7,17 @@ from utils.utils import reaction_time, save_data
 
 
 def visual_choice_test():
+    """
+    8 stimuli are made at random, both in the time between stimuli and in the color of the stimuli. The volunteer must
+    press the designated button as quickly as possible.
+    --------------------------------------------------------------------------------------------------------------------
+    Function responsible for the visual choice reaction time collection protocol. The protocol consists of providing a
+    visual stimulus by randomly lighting a red or green LED. In addition to choosing the color of the LED, the time
+    between stimuli is also random, this to avoid the volunteer's learning within the protocol. At the end, the reaction
+    time and the errors, both by choice and by omission, are saved in a file named 'visual_choice_test.dat'. Errors are
+    assigned a value of zero in the output file.
+    :return: The function has no return at the end
+    """
     red_led = Pin(2, Pin.OUT)
     green_led = Pin(4, Pin.OUT)
     push_button_red = Pin(21, Pin.IN)
@@ -47,6 +58,16 @@ def visual_choice_test():
 
 
 def visual_simple_test():
+    """
+    8 stimuli are made randomly in the time between stimuli. The volunteer is expected to press the designated button as
+    quickly as possible.
+    --------------------------------------------------------------------------------------------------------------------
+    Function responsible for the simple visual reaction time collection protocol. The protocol consists of providing a
+    visual stimulus by lighting a green LED. The time between stimuli is randomly given from 3 to 7 seconds, this to
+    avoid the volunteer learning within the protocol. At the end the reaction time and the error (by omission) are
+    saved in a file named 'visual_simple_test.dat'. Errors are assigned a value of zero in the output file.
+    :return: The function has no return at the end
+    """
     green_led = Pin(4, Pin.OUT)
     push_button_green = Pin(23, Pin.IN)
     results = []
