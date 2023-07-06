@@ -18,10 +18,10 @@ def tactile_choice_test():
     in a file named 'tactile_choice_test.dat'. Errors are assigned a value of zero in the output file.
     :return: The function has no return at the end
     """
-    left = Pin(18, Pin.OUT)
-    rigth = Pin(22, Pin.OUT)
-    push_button_left = Pin(21, Pin.IN)
-    push_button_rigth = Pin(23, Pin.IN)
+    left = Pin(33, Pin.OUT)
+    rigth = Pin(18, Pin.OUT)
+    push_button_left = Pin(12, Pin.IN)
+    push_button_rigth = Pin(21, Pin.IN)
     left_group = [push_button_left, left]
     right_group = [push_button_rigth, rigth]
     possible_choice = [right_group, left_group]
@@ -69,8 +69,8 @@ def tactile_simple_test():
     'tactile_simple_test.dat'. Errors are assigned a value of zero in the output file.
     :return: The function has no return at the end
     """
-    rigth = Pin(22, Pin.OUT)
-    push_button_rigth = Pin(23, Pin.IN)
+    rigth = Pin(18, Pin.OUT)
+    push_button_rigth = Pin(21, Pin.IN)
     results = []
 
     for i in range(0, 8):
