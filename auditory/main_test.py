@@ -51,6 +51,8 @@ def auditory_choice_test():
                 break
 
     save_data('auditory_choice_test.dat', results)
+    low_beeper.deinit()
+    high_beeper.deinit()
 
     return
 
@@ -66,13 +68,11 @@ def auditory_simple_test():
     'auditory_simples_test.dat'. Errors are assigned a value of zero.
     :return: The function has no return at the end
     """
-    high_frequency = 1320
-    beeper = PWM(Pin(19, Pin.OUT), duty=0)
-    push_button_high = Pin(23, Pin.IN)
+    beeper = PWM(Pin(19, Pin.OUT), duty=0, freq=1320)
+    push_button_high = Pin(21, Pin.IN)
     results = []
 
     for i in range(0, 8):
-        beeper.freq(high_frequency)
         sleep(randint(3, 7))
 
         count = start_time = utime.ticks_ms()
@@ -94,5 +94,6 @@ def auditory_simple_test():
                 break
 
     save_data('auditory_simple_test.dat', results)
+    beeper.deinit()
 
     return
