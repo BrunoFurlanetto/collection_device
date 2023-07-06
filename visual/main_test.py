@@ -46,7 +46,7 @@ def visual_choice_test():
                 results.append(reaction_time(start_time, end_time))
 
                 break
-            elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 1000:
+            elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 2000:
                 choice_led[1].value(False)
                 results.append(0)
 
@@ -86,7 +86,7 @@ def visual_simple_test():
                 results.append(reaction_time(start_time, end_time))
 
                 break
-            elif utime.ticks_diff(utime.ticks_ms(), count) > 1000:
+            elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
                 green_led.value(False)
                 results.append(0)
 

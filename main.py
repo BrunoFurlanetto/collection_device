@@ -45,4 +45,4 @@ else:
 
     name = input('Enter the name of the volunteer:').strip().replace(' ', '_')
 
-get_test_files(port, name)
+get_test_files(port, name.lower().replace(' ', '_'))

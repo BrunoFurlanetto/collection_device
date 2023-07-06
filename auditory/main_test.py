@@ -87,7 +87,7 @@ def auditory_simple_test():
                 results.append(reaction_time(start_time, end_time))
 
                 break
-            elif utime.ticks_diff(utime.ticks_ms(), count) > 1000:
+            elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
                 beeper.duty(0)
                 results.append(0)
 

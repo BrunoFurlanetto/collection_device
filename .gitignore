@@ -301,7 +301,8 @@ pip-selfcheck.json
 # Response file extension
 *.dat
 
-# Local folder by graphing
+# Local folder by graphing and results
 /ploting/
+!/results/.gitkeep
 
 # End of https://www.toptal.com/developers/gitignore/api/python,venv,pycharm
