@@ -70,8 +70,18 @@ when the stimulus is presented and the device records the reaction time.
        esptool.py --chip esp32 --port /dev/ttyUSB0 erase_flash
        ```
 
-       **Note:** Replace `/dev/ttyUSB0` with the proper serial port path
-       ESP32 on your system.
+       **Note:** Replace `/dev/ttyUSB0` with the proper serial port path ESP32 on your
+       system. On Windows the default for ports is **COMX**.
+
+
+7. install the firmware
+   - To install MicroPython firmware on the microcontroller, do the following
+   use of the following command:
+     ````
+      esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 115200 write_flash -z 0x1000 esp32.bin
+      ````
+     **Note:** Replace `/dev/ttyUSB0` with the proper serial port path ESP32 on your
+     system. On Windows the default for ports is **COMX**.
 
 ## Usage
 

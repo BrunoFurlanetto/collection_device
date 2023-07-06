@@ -17,37 +17,35 @@ def auditory_choice_test():
     a file named 'auditory_choice_test.dat'. Errors are assigned a value of zero.
     :return: The function has no return at the end
     """
-    low_frequency = 330
-    high_frequency = 1320
-    beeper = PWM(Pin(19, Pin.OUT), duty=0)
-    push_button_low = Pin(21, Pin.IN)
-    push_button_high = Pin(23, Pin.IN)
-    low_group = [push_button_low, low_frequency]
-    high_group = [push_button_high, high_frequency]
+    low_beeper = PWM(Pin(32, Pin.OUT), duty=0, freq=330)
+    high_beeper = PWM(Pin(19, Pin.OUT), duty=0, freq=1320)
+    push_button_low = Pin(12, Pin.IN)
+    push_button_high = Pin(21, Pin.IN)
+    low_group = [push_button_low, low_beeper]
+    high_group = [push_button_high, high_beeper]
     possible_choices = [low_group, high_group]
     results = []
 
     for i in range(0, 8):
         choice_group = choice(possible_choices)
-        another_led = low_group if choice_group == high_group else high_group
-        beeper.freq(choice_group[1])
+        another_beeper = low_group if choice_group == high_group else high_group
         sleep(randint(3, 7))
 
         count = start_time = utime.ticks_ms()
-        beeper.duty(512)
+        choice_group[1].duty(512)
 
         while True:
             success_state = choice_group[0].value()
-            error_state = another_led[0].value()
+            error_state = another_beeper[0].value()
 
             if success_state:
                 end_time = utime.ticks_ms()
-                beeper.duty(0)
+                choice_group[1].duty(0)
                 results.append(reaction_time(start_time, end_time))
 
                 break
-            elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 1000:
-                beeper.duty(0)
+            elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                choice_group[1].duty(0)
                 results.append(0)
 
                 break

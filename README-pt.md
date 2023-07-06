@@ -71,7 +71,19 @@ quando o estímulo é apresentado e o dispositivo registra o tempo de reação.
       ```
 
       **Observação:** Substitua `/dev/ttyUSB0` pelo caminho adequado da porta serial 
-      do ESP32 no seu sistema.
+      do ESP32 no seu sistema. No Windows o padrão para as portas é **COMX**.
+
+
+7. Instale o firmware
+   - Para instalar o firmware do MicroPython no microcontrolador, faça  o seguinte
+   uso do comando a seguir:
+
+      ```
+      esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 115200 write_flash -z 0x1000 esp32.bin
+      ```
+     **Observação:** Substitua `/dev/ttyUSB0` pelo caminho adequado da porta serial 
+      do ESP32 no seu sistema. No Windows o padrão para as portas é **COMX**.
+   
 
 ## Uso
 
