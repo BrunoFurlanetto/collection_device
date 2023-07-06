@@ -18,10 +18,10 @@ def visual_choice_test():
     assigned a value of zero in the output file.
     :return: The function has no return at the end
     """
-    red_led = Pin(2, Pin.OUT)
+    red_led = Pin(14, Pin.OUT)
     green_led = Pin(4, Pin.OUT)
-    push_button_red = Pin(21, Pin.IN)
-    push_button_green = Pin(23, Pin.IN)
+    push_button_red = Pin(12, Pin.IN)
+    push_button_green = Pin(21, Pin.IN)
     red_group = [push_button_red, red_led]
     green_group = [push_button_green, green_led]
     possible_choice = [red_group, green_group]
@@ -69,7 +69,7 @@ def visual_simple_test():
     :return: The function has no return at the end
     """
     green_led = Pin(4, Pin.OUT)
-    push_button_green = Pin(23, Pin.IN)
+    push_button_green = Pin(21, Pin.IN)
     results = []
 
     for i in range(0, 8):
