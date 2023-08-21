@@ -22,6 +22,9 @@ quando o estímulo é apresentado e o dispositivo registra o tempo de reação.
 
 ## Instalação
 
+**Caso já esteja com o MicroPyton instalado no seu microcontrolador e os scripts na memória
+   do ESP32, vá para a seção de [uso](#uso) e siga as instruções.**
+
 1. Clone este repositório em sua máquina local:
 
    ```

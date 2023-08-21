@@ -21,6 +21,8 @@ when the stimulus is presented and the device records the reaction time.
 - Internet access to download dependencies
 
 ## Installation
+**If you already have MicroPyton installed on your microcontroller and the scripts in the ESP32 
+    memory, go to the [usage](#usage) section and follow the instructions.**
 
 1. Clone this repository on your local machine:
 
