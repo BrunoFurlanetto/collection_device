@@ -3,6 +3,7 @@ from time import sleep
 from random import randint, choice
 import utime
 
+from auditory.familiarization import initial_familiarization
 from utils.utils import reaction_time, save_data
 
 
@@ -18,13 +19,15 @@ def auditory_choice_test():
     :return: The function has no return at the end
     """
     low_beeper = PWM(Pin(32, Pin.OUT), duty=0, freq=330)
-    high_beeper = PWM(Pin(19, Pin.OUT), duty=0, freq=1320)
+    high_beeper = PWM(Pin(18, Pin.OUT), duty=0, freq=1320)
     push_button_low = Pin(12, Pin.IN)
-    push_button_high = Pin(21, Pin.IN)
+    push_button_high = Pin(19, Pin.IN)
     low_group = [push_button_low, low_beeper]
     high_group = [push_button_high, high_beeper]
     possible_choices = [low_group, high_group]
     results = []
+    initial_familiarization(low_group, high_group)
+    print('Teste iniciado!')
 
     for i in range(0, 8):
         choice_group = choice(possible_choices)
@@ -68,8 +71,8 @@ def auditory_simple_test():
     'auditory_simples_test.dat'. Errors are assigned a value of zero.
     :return: The function has no return at the end
     """
-    beeper = PWM(Pin(19, Pin.OUT), duty=0, freq=1320)
-    push_button_high = Pin(21, Pin.IN)
+    beeper = PWM(Pin(18, Pin.OUT), duty=0, freq=1320)
+    push_button_high = Pin(19, Pin.IN)
     results = []
 
     for i in range(0, 8):
