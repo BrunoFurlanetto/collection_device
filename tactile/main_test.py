@@ -19,11 +19,11 @@ def tactile_choice_test():
     :return: The function has no return at the end
     """
     left = Pin(33, Pin.OUT)
-    rigth = Pin(18, Pin.OUT)
+    right = Pin(5, Pin.OUT)
     push_button_left = Pin(12, Pin.IN)
-    push_button_rigth = Pin(21, Pin.IN)
+    push_button_right = Pin(19, Pin.IN)
     left_group = [push_button_left, left]
-    right_group = [push_button_rigth, rigth]
+    right_group = [push_button_right, right]
     possible_choice = [right_group, left_group]
     results = []
 
@@ -69,26 +69,26 @@ def tactile_simple_test():
     'tactile_simple_test.dat'. Errors are assigned a value of zero in the output file.
     :return: The function has no return at the end
     """
-    rigth = Pin(18, Pin.OUT)
-    push_button_rigth = Pin(21, Pin.IN)
+    right = Pin(5, Pin.OUT)
+    push_button_right = Pin(19, Pin.IN)
     results = []
 
     for i in range(0, 8):
         sleep(randint(3, 7))
         count = start_time = utime.ticks_ms()
-        rigth.value(True)
+        right.value(True)
 
         while True:
-            success_state = push_button_rigth.value()
+            success_state = push_button_right.value()
 
             if success_state:
                 end_time = utime.ticks_ms()
-                rigth.value(0)
+                right.value(0)
                 results.append(reaction_time(start_time, end_time))
 
                 break
             elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
-                rigth.value(False)
+                right.value(False)
                 results.append(0)
 
                 break
