@@ -1,11 +1,24 @@
-import sys
+from machine import Pin
 
 from auditory.main_test import auditory_choice_test, auditory_simple_test
 from tactile.main_test import tactile_choice_test, tactile_simple_test
 from visual.main_test import visual_choice_test, visual_simple_test
 
 
+def reset_ports():
+    ports = [15, 2, 4, 5, 18, 19, 21, 13, 12, 14, 27, 26, 25, 32, 23, 22, 34, 35]
+
+    for port in ports:
+        try:
+            _ = Pin(port, Pin.OUT)
+        except Exception:
+            ...
+
+    return
+
+
 while True:
+    reset_ports()
     print('=' * 100)
     print('Versão 1.0 do protótipo de dispositivo para captação do tempo de reação simples e de escolha')
     print('=' * 100)
