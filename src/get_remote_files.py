@@ -1,8 +1,7 @@
-import locale
 import subprocess
 
+from time import sleep
 
-linguage = locale.getlocale()[0]
 stimuli = ['visual', 'auditory', 'tactile']
 
 
@@ -13,56 +12,50 @@ def get_test_files(port, name):
     :param name: Name of the volunteer to be in the filename
     :return: The function has no return
     """
-    print('Processando os resultados obtidos...') if linguage == 'pt_BR' else print('Processing the results obtained...')
-
+    print('Processando os resultados obtidos...')
+    sleep(1)
     for stimulus in stimuli:
         try:
+            command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_simple_test.dat ..\\results\\{stimulus}_simple_test_{name}.dat'
             result = subprocess.run(
-                ['ampy', '--port', port, 'get', f'{stimulus}_simple_test.dat',
-                 f'results/{stimulus}_simple_test_{name}.dat'],
-                capture_output=True, text=True
+                command,
+                shell=True,
+                capture_output=True,
+                text=True
             )
 
             if result.returncode != 0:
-                if linguage == 'pt_BR':
-                    print(f'Arquivo {stimulus}_simple_test.dat não encontrado.')
-                else:
-                    print(f'File {stimulus}_simple_test.dat not found.')
+                print(f'Arquivo {stimulus}_simple_test.dat não encontrado.')
             else:
-                result = subprocess.run(
-                    ['ampy', '--port', port, 'rm', f'{stimulus}_simple_test.dat'],
-                    capture_output=True, text=True
+                subprocess.run(
+                    f'venv\\Scripts\\ampy -p {port} rm {stimulus}_simple_test.dat',
+                    capture_output=True,
+                    text=True,
+                    shell=True
                 )
         except Exception as e:
-            if linguage == 'pt_BR':
-                print(f'Erro: {e}')
-            else:
-                print(f'Error: {e}')
+            print(f'Erro: {e}')
 
         try:
+            command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_choice_test.dat ..\\results\\{stimulus}_choice_test_{name}.dat'
             result = subprocess.run(
-                ['ampy', '--port', port, 'get', f'{stimulus}_choice_test.dat',
-                 f'results/{stimulus}_choice_test_{name}.dat'],
-                capture_output=True, text=True
+                command,
+                capture_output=True,
+                text=True,
+                shell=True
             )
 
             if result.returncode != 0:
-                if linguage == 'pt_BR':
-                    print(f'Aarquivo {stimulus}_choice_test.dat não encontrado.')
-                else:
-                    print(f'File {stimulus}_choice_test.dat not find.')
+                print(f'Aarquivo {stimulus}_choice_test.dat não encontrado.')
             else:
-                result = subprocess.run(
-                    ['ampy', '--port', port, 'rm', f'{stimulus}_choice_test.dat'],
-                    capture_output=True, text=True
+                subprocess.run(
+                    f'ampy -p {port} rm {stimulus}_choice_test.dat',
+                    capture_output=True,
+                    text=True,
+                    shell=True
                 )
         except Exception as e:
-            if linguage == 'pt_BR':
-                print(f'Erro: {e}')
-            else:
-                print(f'Error: {e}')
+            print(f'Erro: {e}')
 
-    if linguage == 'pt_BR':
-        print('Os arquivos resultantes dos testes estão na pasta "results".')
-    else:
-        print('The files resulting from the tests are in the "results" folder.')
+    print('Os arquivos resultantes dos testes estão na pasta "results".')
+    sleep(10)
