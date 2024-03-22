@@ -1,33 +1,32 @@
+from random import randint, choice
 from time import sleep
 
+import utime
 
-def initial_familiarization(low_group, high_group):
+
+def auditory_familiarization(low_group, high_group, possible_choices):
     print('Familiarização do teste auditivo iniciado.')
-    while True:
-        r = input('Pressione R para mostrar o estimulo sonoro da via direita e L para a esquerda ou Q para finalizar:').strip().lower()
 
-        if r == 'r':
-            high_group[1].duty(512)
+    for i in range(0, 3):
+        choice_group = choice(possible_choices)
+        another_beeper = low_group if choice_group == high_group else high_group
+        sleep(randint(3, 7))
 
-            while True:
-                if high_group[0].value():
-                    high_group[1].duty(0)
+        count = start_time = utime.ticks_ms()
+        choice_group[1].duty_u16(50)
 
-                    break
+        while True:
+            success_state = choice_group[0].value()
+            error_state = another_beeper[0].value()
 
-        elif r == 'l':
-            low_group[1].duty(512)
+            if success_state:
+                end_time = utime.ticks_ms()
+                choice_group[1].duty_u16(0)
 
-            while True:
-                if low_group[0].value():
-                    low_group[1].duty(0)
+                break
+            elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                choice_group[1].duty_u16(0)
 
-                    break
+                break
 
-        elif r == 'q':
-            print('Familiarização inicial finalizada, iniciando o teste em')
-            for s in range(5, 0, -1):
-                print(s)
-                sleep(1)
-
-            return
+    input('Familiarização finalizada, aperte enter para iniciar o teste.')

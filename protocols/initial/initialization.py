@@ -1,8 +1,8 @@
 from machine import Pin
 
-from auditory.main_test import auditory_choice_test, auditory_simple_test
-from tactile.main_test import tactile_choice_test, tactile_simple_test
-from visual.main_test import visual_choice_test, visual_simple_test
+from protocols.auditory.main_test import auditory_choice_test, auditory_simple_test
+from protocols.tactile.main_test import tactile_choice_test, tactile_simple_test
+from protocols.visual.main_test import visual_choice_test, visual_simple_test
 
 
 def reset_ports():

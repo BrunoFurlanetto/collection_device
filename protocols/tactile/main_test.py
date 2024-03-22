@@ -3,7 +3,7 @@ from time import sleep
 from random import randint, choice
 import utime
 
-from utils.utils import reaction_time, save_data
+from protocols.utils.utils import reaction_time, save_data
 
 
 def tactile_choice_test():

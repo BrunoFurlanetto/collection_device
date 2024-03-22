@@ -40,24 +40,21 @@ def init_install(port):
 
 
 def send_protocols_to_esp(port):
-    list_directories = os.listdir('..\\protocols')
+    list_directories = os.listdir('..')
     print('Reiniciando o dispositivo...')
     subprocess.run(f'venv\\Scripts\\ampy -p {port} reset', shell=True)
     errors = []
     print('Reinicialização completada com sucesso.')
     print('Enviando protocolos para o dispositivo...')
 
-    for directory in list_directories:
-        try:
-            subprocess.run(f'venv\\Scripts\\ampy -p {port} put ..\\protocols\\{directory}', shell=True)
-        except subprocess.SubprocessError as e:
-            with open('log.txt', 'w+') as file:
-                file.write(f'{e}: {datetime.now()}\n')
+    try:
+        subprocess.run(f'venv\\Scripts\\ampy -p {port} put ..\\protocols', shell=True)
+    except subprocess.SubprocessError as e:
+        with open('log.txt', 'w+') as file:
+            file.write(f'{e}: {datetime.now()}\n')
 
-            print(f'{directory} não enviado para o dispositivo, verificar log.txt')
-            errors.append(e)
-
-            break
+        print(f'Procolos não enviado para o dispositivo, verificar log.txt')
+        errors.append(e)
 
     return errors
 

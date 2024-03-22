@@ -8,9 +8,9 @@ from time import sleep
 def connect_esp(port):
     print('Conectando com o microcontrolador...')
     sleep(1)
-    print('Ao entrar, pressione "ctrl + B" e execute execfile("/initial/initialization.py") para dar início ao protocolo de coleta')
+    print('Ao entrar, pressione "ctrl + B" e execute execfile("protocols/initial/initialization.py") para dar início ao protocolo de coleta')
     sleep(1)
-    python_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'venv\\Scripts\\python')
+    python_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..\\venv\\Scripts\\python')
 
     try:
         subprocess.call(f'{python_path} -m serial.tools.miniterm {port} 115200')
