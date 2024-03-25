@@ -24,7 +24,7 @@ def auditory_choice_test():
         sleep(1)
         choice_group = choice(possible_choices)
         another_beeper = low_group if choice_group == high_group else high_group
-        wait_time = randint(3, 7) * 1000
+        wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
         anticipated = anticipation_test(wait_time_start, wait_time, push_button_high, push_button_low)
 
@@ -68,9 +68,11 @@ def auditory_simple_test():
     push_button_high = Pin(19, Pin.IN)
     results = []
     auditory_simple_familiarization(beeper, push_button_high)
+    print('Teste iniciado!')
 
     for _ in range(0, 8):
-        wait_time = randint(3, 7) * 1000
+        sleep(1)
+        wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
         anticipated = anticipation_test(wait_time_start, wait_time, push_button_high)
 

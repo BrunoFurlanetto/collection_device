@@ -28,11 +28,13 @@ def tactile_choice_test():
     possible_choice = [right_group, left_group]
     results = []
     tactile_choice_familiarization(left_group, right_group, possible_choice)
+    print('Teste iniciado!')
 
     for _ in range(0, 20):
+        sleep(1)
         choice_side = choice(possible_choice)
         another_side = right_group if choice_side == left_group else left_group
-        wait_time = randint(3, 7) * 1000
+        wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
         anticipated = anticipation_test(wait_time_start, wait_time, push_button_right, push_button_left)
 
@@ -78,9 +80,12 @@ def tactile_simple_test():
     right = Pin(5, Pin.OUT)
     push_button_right = Pin(19, Pin.IN)
     results = []
+    tactile_simple_familiarization(right, push_button_right)
+    print('Teste iniciado!')
 
     for _ in range(0, 20):
-        wait_time = randint(3, 7) * 1000
+        sleep(1)
+        wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
         anticipated = anticipation_test(wait_time_start, wait_time, push_button_right)
 

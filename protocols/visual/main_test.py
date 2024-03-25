@@ -4,7 +4,7 @@ from random import randint, choice
 import utime
 
 from protocols.utils.utils import reaction_time, save_data, anticipation_test
-from protocols.visual.familiarization import visual_choice_familiarization
+from protocols.visual.familiarization import visual_choice_familiarization, visual_simple_familiarization
 
 
 def visual_choice_test():
@@ -34,7 +34,7 @@ def visual_choice_test():
         sleep(1)
         choice_led = choice(possible_choice)
         another_led = red_group if choice_led == green_group else green_group
-        wait_time = randint(3, 7) * 1000
+        wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
         anticipated = anticipation_test(wait_time_start, wait_time, push_button_red, push_button_green)
 
@@ -77,9 +77,12 @@ def visual_simple_test():
     green_led = Pin(14, Pin.OUT)
     push_button_green = Pin(19, Pin.IN)
     results = []
+    visual_simple_familiarization(green_led, push_button_green)
+    print('Teste iniciado!')
 
     for _ in range(0, 20):
-        wait_time = randint(3, 7) * 1000
+        sleep(1)
+        wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
         anticipated = anticipation_test(wait_time_start, wait_time, push_button_green)
 
