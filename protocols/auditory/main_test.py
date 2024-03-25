@@ -29,7 +29,7 @@ def auditory_choice_test():
     auditory_familiarization(low_group, high_group, possible_choices)
     print('Teste iniciado!')
 
-    for i in range(0, 20):
+    for _ in range(0, 20):
         sleep(1)
         choice_group = choice(possible_choices)
         another_beeper = low_group if choice_group == high_group else high_group

@@ -4,7 +4,7 @@ from time import sleep
 import utime
 
 
-def auditory_familiarization(low_group, high_group, possible_choices):
+def auditory_choice_familiarization(low_group, high_group, possible_choices):
     print('Familiarização do teste auditivo iniciado.')
 
     for i in range(0, 3):

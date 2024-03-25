@@ -4,6 +4,7 @@ from random import randint, choice
 import utime
 
 from protocols.utils.utils import reaction_time, save_data
+from protocols.visual.familiarization import visual_familiarization
 
 
 def visual_choice_test():
@@ -26,31 +27,43 @@ def visual_choice_test():
     green_group = [push_button_green, green_led]
     possible_choice = [red_group, green_group]
     results = []
+    visual_familiarization(red_group, green_group, possible_choice)
+    print('Teste iniciado!')
 
-    for i in range(0, 8):
+    for _ in range(0, 20):
+        sleep(1)
         choice_led = choice(possible_choice)
         another_led = red_group if choice_led == green_group else green_group
+        anticipated = False
+        wait_time = randint(3, 7) * 1000
+        wait_time_start = utime.ticks_ms()
 
-        sleep(randint(3, 7))
-
-        start_time = count = utime.ticks_ms()
-        choice_led[1].value(True)
-
-        while True:
-            success_state = choice_led[0].value()
-            error_state = another_led[0].value()
-
-            if success_state:
-                end_time = utime.ticks_ms()
-                choice_led[1].value(False)
-                results.append(reaction_time(start_time, end_time))
-
-                break
-            elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 2000:
-                choice_led[1].value(False)
+        while utime.ticks_diff(utime.ticks_ms(), wait_time_start) < wait_time:
+            if choice_led[0].value() or another_led[0].value():
                 results.append(0)
+                anticipated = True
 
                 break
+
+        if not anticipated:
+            start_time = count = utime.ticks_ms()
+            choice_led[1].value(True)
+
+            while True:
+                success_state = choice_led[0].value()
+                error_state = another_led[0].value()
+
+                if success_state:
+                    end_time = utime.ticks_ms()
+                    choice_led[1].value(False)
+                    results.append(reaction_time(start_time, end_time))
+
+                    break
+                elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                    choice_led[1].value(False)
+                    results.append(0)
+
+                    break
 
     save_data('visual_choice_test.dat', results)
 
