@@ -4,7 +4,7 @@ from random import randint, choice
 import utime
 
 from protocols.utils.utils import reaction_time, save_data
-from protocols.visual.familiarization import visual_familiarization
+from protocols.visual.familiarization import visual_choice_familiarization
 
 
 def visual_choice_test():
@@ -27,7 +27,7 @@ def visual_choice_test():
     green_group = [push_button_green, green_led]
     possible_choice = [red_group, green_group]
     results = []
-    visual_familiarization(red_group, green_group, possible_choice)
+    visual_choice_familiarization(red_group, green_group, possible_choice)
     print('Teste iniciado!')
 
     for _ in range(0, 20):

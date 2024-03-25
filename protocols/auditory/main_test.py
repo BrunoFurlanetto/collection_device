@@ -4,17 +4,8 @@ from time import sleep
 from random import randint, choice
 import utime
 
-from protocols.auditory.familiarization import auditory_familiarization
+from protocols.auditory.familiarization import auditory_choice_familiarization
 from protocols.utils.utils import reaction_time, save_data
-
-
-def watch_button(button_1, button_2=None):
-    while True:
-        if button_1.value():
-            return True
-
-        if button_2 and button_2.value():
-            return True
 
 
 def auditory_choice_test():
@@ -26,7 +17,7 @@ def auditory_choice_test():
     high_group = [push_button_high, high_beeper]
     possible_choices = [low_group, high_group]
     results = []
-    auditory_familiarization(low_group, high_group, possible_choices)
+    auditory_choice_familiarization(low_group, high_group, possible_choices)
     print('Teste iniciado!')
 
     for _ in range(0, 20):
