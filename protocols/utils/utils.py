@@ -1,4 +1,4 @@
-from utime import ticks_diff
+from utime import ticks_diff, ticks_ms
 
 
 def reaction_time(start_time, end_time):
@@ -22,3 +22,12 @@ def save_data(filename, data):
         # Escrever cada valor em uma linha separada
         for index, value in enumerate(data, start=1):
             f.write(f'{index}   {value}\n')
+
+
+def anticipation_test(wait_time_start, wait_time, push_button_1, push_button_2=None):
+    while ticks_diff(ticks_ms(), wait_time_start) < wait_time:
+        if push_button_1.value() or push_button_2.value() if push_button_2 else True:
+
+            return True
+
+    return False

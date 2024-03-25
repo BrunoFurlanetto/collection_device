@@ -1,5 +1,5 @@
 
-def visual_choice_familiarization(red_group, green_group, possible_choices):
+def visual_choice_familiarization(red_group, green_group, possible_choice):
     print('Familiarizção Iniciada.')
 
     for i in range(0, 3):
@@ -25,3 +25,24 @@ def visual_choice_familiarization(red_group, green_group, possible_choices):
                 break
 
     input('Pressione ENTER para iniciar o teste.')
+
+
+def visual_simple_familiarization(green_led, push_button):
+    for _ in range(0, 3):
+        sleep(randint(3, 7))
+        count = utime.ticks_ms()
+        green_led.value(True)
+
+        while True:
+            success_state = push_button.value()
+
+            if success_state:
+                green_led.value(False)
+
+                break
+            elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                green_led.value(False)
+
+                break
+
+    input('Pressione ENTER para iniciar o teste!')

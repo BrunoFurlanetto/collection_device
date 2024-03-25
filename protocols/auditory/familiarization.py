@@ -30,3 +30,25 @@ def auditory_choice_familiarization(low_group, high_group, possible_choices):
                 break
 
     input('Familiarização finalizada, aperte enter para iniciar o teste.')
+
+
+def auditory_simple_familiarization(beeper, push_button):
+    for _ in range(0, 3):
+        sleep(randint(3, 7))
+
+        count = utime.ticks_ms()
+        beeper.duty_u16(50)
+
+        while True:
+            success_state = push_button.value()
+
+            if success_state:
+                beeper.duty_u16(0)
+
+                break
+            elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                beeper.duty_u16(0)
+
+                break
+
+    input('Pessione ENTER para iniciar o teste!')

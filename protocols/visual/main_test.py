@@ -3,7 +3,7 @@ from time import sleep
 from random import randint, choice
 import utime
 
-from protocols.utils.utils import reaction_time, save_data
+from protocols.utils.utils import reaction_time, save_data, anticipation_test
 from protocols.visual.familiarization import visual_choice_familiarization
 
 
@@ -34,16 +34,9 @@ def visual_choice_test():
         sleep(1)
         choice_led = choice(possible_choice)
         another_led = red_group if choice_led == green_group else green_group
-        anticipated = False
         wait_time = randint(3, 7) * 1000
         wait_time_start = utime.ticks_ms()
-
-        while utime.ticks_diff(utime.ticks_ms(), wait_time_start) < wait_time:
-            if choice_led[0].value() or another_led[0].value():
-                results.append(0)
-                anticipated = True
-
-                break
+        anticipated = anticipation_test(wait_time_start, wait_time, push_button_red, push_button_green)
 
         if not anticipated:
             start_time = count = utime.ticks_ms()
@@ -85,25 +78,31 @@ def visual_simple_test():
     push_button_green = Pin(19, Pin.IN)
     results = []
 
-    for i in range(0, 8):
-        sleep(randint(3, 7))
-        count = start_time = utime.ticks_ms()
-        green_led.value(True)
+    for _ in range(0, 20):
+        wait_time = randint(3, 7) * 1000
+        wait_time_start = utime.ticks_ms()
+        anticipated = anticipation_test(wait_time_start, wait_time, push_button_green)
 
-        while True:
-            success_state = push_button_green.value()
+        if not anticipated:
+            count = start_time = utime.ticks_ms()
+            green_led.value(True)
 
-            if success_state:
-                end_time = utime.ticks_ms()
-                green_led.value(False)
-                results.append(reaction_time(start_time, end_time))
+            while True:
+                success_state = push_button_green.value()
 
-                break
-            elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
-                green_led.value(False)
-                results.append(0)
+                if success_state:
+                    end_time = utime.ticks_ms()
+                    green_led.value(False)
+                    results.append(reaction_time(start_time, end_time))
 
-                break
+                    break
+                elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                    green_led.value(False)
+                    results.append(0)
+
+                    break
+        else:
+            results.append(0)
 
     save_data('visual_simple_test.dat', results)
 
