@@ -3,7 +3,8 @@ from time import sleep
 from random import randint, choice
 import utime
 
-from protocols.utils.utils import reaction_time, save_data
+from protocols.utils.utils import reaction_time, save_data, anticipation_test
+from protocols.tactile.familiarization import tactile_choice_familiarization, tactile_simple_familiarization
 
 
 def tactile_choice_test():
@@ -26,31 +27,36 @@ def tactile_choice_test():
     right_group = [push_button_right, right]
     possible_choice = [right_group, left_group]
     results = []
+    tactile_choice_familiarization(left_group, right_group, possible_choice)
 
-    for i in range(0, 8):
+    for _ in range(0, 20):
         choice_side = choice(possible_choice)
         another_side = right_group if choice_side == left_group else left_group
+        wait_time = randint(3, 7) * 1000
+        wait_time_start = utime.ticks_ms()
+        anticipated = anticipation_test(wait_time_start, wait_time, push_button_right, push_button_left)
 
-        sleep(randint(3, 7))
+        if not anticipated:
+            count = start_time = utime.ticks_ms()
+            choice_side[1].value(True)
 
-        count = start_time = utime.ticks_ms()
-        choice_side[1].value(True)
+            while True:
+                success_state = choice_side[0].value()
+                error_state = another_side[0].value()
 
-        while True:
-            success_state = choice_side[0].value()
-            error_state = another_side[0].value()
+                if success_state:
+                    end_time = utime.ticks_ms()
+                    choice_side[1].value(False)
+                    results.append(reaction_time(start_time, end_time))
 
-            if success_state:
-                end_time = utime.ticks_ms()
-                choice_side[1].value(False)
-                results.append(reaction_time(start_time, end_time))
+                    break
+                elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                    choice_side[1].value(False)
+                    results.append(0)
 
-                break
-            elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 2000:
-                choice_side[1].value(False)
-                results.append(0)
-
-                break
+                    break
+        else:
+            results.append(0)
 
     save_data('tactile_choice_test.dat', results)
 
@@ -73,25 +79,31 @@ def tactile_simple_test():
     push_button_right = Pin(19, Pin.IN)
     results = []
 
-    for i in range(0, 8):
-        sleep(randint(3, 7))
-        count = start_time = utime.ticks_ms()
-        right.value(True)
+    for _ in range(0, 20):
+        wait_time = randint(3, 7) * 1000
+        wait_time_start = utime.ticks_ms()
+        anticipated = anticipation_test(wait_time_start, wait_time, push_button_right)
 
-        while True:
-            success_state = push_button_right.value()
+        if not anticipated:
+            count = start_time = utime.ticks_ms()
+            right.value(True)
 
-            if success_state:
-                end_time = utime.ticks_ms()
-                right.value(0)
-                results.append(reaction_time(start_time, end_time))
+            while True:
+                success_state = push_button_right.value()
 
-                break
-            elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
-                right.value(False)
-                results.append(0)
+                if success_state:
+                    end_time = utime.ticks_ms()
+                    right.value(0)
+                    results.append(reaction_time(start_time, end_time))
 
-                break
+                    break
+                elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                    right.value(False)
+                    results.append(0)
+
+                    break
+        else:
+            results.append(0)
 
     save_data('tactile_simple_test.dat', results)
 
