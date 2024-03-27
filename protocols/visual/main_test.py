@@ -19,8 +19,8 @@ def visual_choice_test():
     assigned a value of zero in the output file.
     :return: The function has no return at the end
     """
-    red_led = Pin(2, Pin.OUT)
-    green_led = Pin(14, Pin.OUT)
+    red_led = Pin(18, Pin.OUT)  # TODO: Change after board replacement to port 2
+    green_led = Pin(32, Pin.OUT)  # TODO: Change after board replacement to port 14
     push_button_red = Pin(19, Pin.IN)
     push_button_green = Pin(12, Pin.IN)
     red_group = [push_button_red, red_led]
@@ -74,7 +74,7 @@ def visual_simple_test():
     saved in a file named 'visual_simple_test.dat'. Errors are assigned a value of zero in the output file.
     :return: The function has no return at the end
     """
-    green_led = Pin(14, Pin.OUT)
+    green_led = Pin(18, Pin.OUT)  # TODO: Change after board replacement to port 14
     push_button_green = Pin(19, Pin.IN)
     results = []
     visual_simple_familiarization(green_led, push_button_green)
