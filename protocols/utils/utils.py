@@ -26,7 +26,7 @@ def save_data(filename, data):
 
 def anticipation_test(wait_time_start, wait_time, push_button_1, push_button_2=None):
     while ticks_diff(ticks_ms(), wait_time_start) < wait_time:
-        if push_button_1.value() or push_button_2.value() if push_button_2 else True:
+        if push_button_1.value() or (push_button_2.value() if push_button_2 else False):
 
             return True
 
