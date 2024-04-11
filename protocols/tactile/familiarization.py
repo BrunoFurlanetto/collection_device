@@ -1,4 +1,6 @@
 import utime
+from random import choice, randint
+from time import sleep
 
 
 def tactile_choice_familiarization(right_group, left_group, possible_choice):

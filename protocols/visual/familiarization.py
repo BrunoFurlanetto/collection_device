@@ -1,3 +1,7 @@
+from time import sleep
+from random import randint, choice
+import utime
+
 
 def visual_choice_familiarization(red_group, green_group, possible_choice):
     print('Familiarizção Iniciada.')
