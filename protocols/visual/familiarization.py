@@ -6,7 +6,7 @@ import utime
 def visual_choice_familiarization(red_group, green_group, possible_choice):
     print('Familiarizção Iniciada.')
 
-    for i in range(0, 3):
+    for i in range(0, 5):
         choice_led = choice(possible_choice)
         another_led = red_group if choice_led == green_group else green_group
 

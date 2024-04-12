@@ -9,6 +9,22 @@ from protocols.utils.utils import reaction_time, save_data, anticipation_test
 
 
 def auditory_choice_test():
+    """
+    20 stimuli are made with a time interval between them at random, ranging from 3 to 7 seconds. The volunteer must
+    then press the button as quickly as possible.
+    --------------------------------------------------------------------------------------------------------------------
+    Function responsible for the auditory choice reaction time collection protocol. The protocol consists of providing a
+    sound stimulus that is directed into the participant's right or left ear through two buzzers inside a headphone. In
+    addition to choosing the side, the time between stimuli is also random, to avoid volunteer learning within the
+    protocol. At the end, the reaction time and errors, both by choice and omission and by anticipation, are saved in
+    a file called 'visual_choice_test.dat'.
+    :return: The function has no return at the end
+    --------------------------------------------------------------------------------------------------------------------
+    The acronyms that are added to the results in case of volunteer error are as follows:
+        • DP - Didn't press
+        • WS - Wrong side and
+        • AT - Anticipated
+    """
     low_beeper = PWM(Pin(32, Pin.OUT), freq=500, duty_u16=0)
     high_beeper = PWM(Pin(18, Pin.OUT), freq=500, duty_u16=0)
     push_button_low = Pin(12, Pin.IN)
@@ -40,13 +56,17 @@ def auditory_choice_test():
                     end_time = utime.ticks_ms()
                     choice_group[1].duty_u16(0)
                     results.append(reaction_time(start_time, end_time))
+
                     break
-                elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                elif error_state:
                     choice_group[1].duty_u16(0)
-                    results.append(0)
+                    results.append('WS')
+
                     break
+                elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                    results.append('DP')
         else:
-            results.append(0)
+            results.append('AT')
 
     save_data('auditory_choice_test.dat', results)
     low_beeper.deinit()
@@ -55,7 +75,7 @@ def auditory_choice_test():
 
 def auditory_simple_test():
     """
-    8 stimuli are made with a time interval between them at random, ranging from 3 to 7 seconds. The volunteer must
+    20 stimuli are made with a time interval between them at random, ranging from 3 to 7 seconds. The volunteer must
     then press the button as quickly as possible.
     -------------------------------------------------- ------------------------------------------------------------
     Function responsible for the collection protocol of the auditory simple reaction time. The protocol consists of
@@ -63,6 +83,10 @@ def auditory_simple_test():
     At the end, the volunteer's reaction time and errors (by omission) are saved in a file named
     'auditory_simples_test.dat'. Errors are assigned a value of zero.
     :return: The function has no return at the end
+    ---------------------------------------------------------------------------------------------------------------
+    The acronyms that are added to the results in case of volunteer error are as follows:
+        • DP - Didn't press
+        • AT - Anticipated
     """
     beeper = PWM(Pin(18, Pin.OUT), freq=500, duty_u16=0)
     push_button_high = Pin(19, Pin.IN)
@@ -91,11 +115,11 @@ def auditory_simple_test():
                     break
                 elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
                     beeper.duty_u16(0)
-                    results.append(0)
+                    results.append('DP')
 
                     break
         else:
-            results.append(0)
+            results.append('AT')
 
     save_data('auditory_simple_test.dat', results)
     beeper.deinit()

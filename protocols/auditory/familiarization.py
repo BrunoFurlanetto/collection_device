@@ -7,7 +7,7 @@ import utime
 def auditory_choice_familiarization(low_group, high_group, possible_choices):
     print('Familiarização iniciada!')
 
-    for i in range(0, 3):
+    for i in range(0, 5):
         choice_group = choice(possible_choices)
         another_beeper = low_group if choice_group == high_group else high_group
         sleep(randint(3, 7))

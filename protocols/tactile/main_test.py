@@ -9,7 +9,7 @@ from protocols.tactile.familiarization import tactile_choice_familiarization, ta
 
 def tactile_choice_test():
     """
-    8 stimuli are made at random, both in the time between stimuli and on the side of the stimuli. The volunteer must
+    20 stimuli are made at random, both in the time between stimuli and on the side of the stimuli. The volunteer must
     press the designated button as quickly as possible.
     --------------------------------------------------------------------------------------------------------------------
     Function responsible for the tactile choice reaction time collection protocol. The protocol consists of providing a
@@ -18,6 +18,11 @@ def tactile_choice_test():
     learning within the protocol. At the end the reaction time and the errors, both by choice and by omission are saved
     in a file named 'tactile_choice_test.dat'. Errors are assigned a value of zero in the output file.
     :return: The function has no return at the end
+    --------------------------------------------------------------------------------------------------------------------
+    The acronyms that are added to the results in case of volunteer error are as follows:
+        • DP - Didn't press
+        • WS - Wrong side and
+        • AT - Anticipated
     """
     left = Pin(33, Pin.OUT)
     right = Pin(5, Pin.OUT)
@@ -52,13 +57,15 @@ def tactile_choice_test():
                     results.append(reaction_time(start_time, end_time))
 
                     break
-                elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                elif error_state:
                     choice_side[1].value(False)
-                    results.append(0)
+                    results.append('WS')
 
                     break
+                elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                    results.append('DP')
         else:
-            results.append(0)
+            results.append('AT')
 
     save_data('tactile_choice_test.dat', results)
 
@@ -67,7 +74,7 @@ def tactile_choice_test():
 
 def tactile_simple_test():
     """
-    8 stimuli are made randomly in the time between stimuli. The volunteer is expected to press the designated
+    20 stimuli are made randomly in the time between stimuli. The volunteer is expected to press the designated
     button as quickly as possible.
     -----------------------------------------------------------------------------------------------------------
     Function responsible for the simple tactile reaction time collection protocol. The protocol consists of
@@ -76,6 +83,10 @@ def tactile_simple_test():
     protocol. At the end the reaction time and the error (by omission) are saved in a file named
     'tactile_simple_test.dat'. Errors are assigned a value of zero in the output file.
     :return: The function has no return at the end
+    --------------------------------------------------------------------------------------------------------------------
+    The acronyms that are added to the results in case of volunteer error are as follows:
+        • DP - Didn't press
+        • AT - Anticipated
     """
     right = Pin(5, Pin.OUT)
     push_button_right = Pin(19, Pin.IN)
@@ -104,11 +115,11 @@ def tactile_simple_test():
                     break
                 elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
                     right.value(False)
-                    results.append(0)
+                    results.append('DP')
 
                     break
         else:
-            results.append(0)
+            results.append('AT')
 
     save_data('tactile_simple_test.dat', results)
 

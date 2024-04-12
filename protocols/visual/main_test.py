@@ -9,7 +9,7 @@ from protocols.visual.familiarization import visual_choice_familiarization, visu
 
 def visual_choice_test():
     """
-    8 stimuli are made at random, both in the time between stimuli and in the color of the stimuli. The volunteer must
+    20 stimuli are made at random, both in the time between stimuli and in the color of the stimuli. The volunteer must
     press the designated button as quickly as possible.
     --------------------------------------------------------------------------------------------------------------------
     Function responsible for the visual choice reaction time collection protocol. The protocol consists of providing a
@@ -18,9 +18,14 @@ def visual_choice_test():
     time and the errors, both by choice and by omission, are saved in a file named 'visual_choice_test.dat'. Errors are
     assigned a value of zero in the output file.
     :return: The function has no return at the end
+    --------------------------------------------------------------------------------------------------------------------
+    The acronyms that are added to the results in case of volunteer error are as follows:
+        • DP - Didn't press
+        • WS - Wrong side and
+        • AT - Anticipated
     """
-    red_led = Pin(2, Pin.OUT)  # TODO: Change after board replacement to port 2
-    green_led = Pin(14, Pin.OUT)  # TODO: Change after board replacement to port 14
+    red_led = Pin(2, Pin.OUT)
+    green_led = Pin(14, Pin.OUT)
     push_button_red = Pin(19, Pin.IN)
     push_button_green = Pin(12, Pin.IN)
     red_group = [push_button_red, red_led]
@@ -52,11 +57,15 @@ def visual_choice_test():
                     results.append(reaction_time(start_time, end_time))
 
                     break
-                elif error_state or utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                elif error_state:
                     choice_led[1].value(False)
-                    results.append(0)
+                    results.append('WS')
 
                     break
+                elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                    results.append('DP')
+        else:
+            results.append('AT')
 
     save_data('visual_choice_test.dat', results)
 
@@ -73,6 +82,10 @@ def visual_simple_test():
     avoid the volunteer learning within the protocol. At the end the reaction time and the error (by omission) are
     saved in a file named 'visual_simple_test.dat'. Errors are assigned a value of zero in the output file.
     :return: The function has no return at the end
+    --------------------------------------------------------------------------------------------------------------------
+    The acronyms that are added to the results in case of volunteer error are as follows:
+        • DP - Didn't press
+        • AT - Anticipated
     """
     green_led = Pin(14, Pin.OUT)  # TODO: Change after board replacement to port 14
     push_button_green = Pin(19, Pin.IN)
@@ -101,11 +114,11 @@ def visual_simple_test():
                     break
                 elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
                     green_led.value(False)
-                    results.append(0)
+                    results.append('DP')
 
                     break
         else:
-            results.append(0)
+            results.append('AT')
 
     save_data('visual_simple_test.dat', results)
 

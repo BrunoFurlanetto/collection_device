@@ -6,7 +6,7 @@ from time import sleep
 def tactile_choice_familiarization(right_group, left_group, possible_choice):
     print('Familiarização iniciada!')
 
-    for _ in range(0, 3):
+    for _ in range(0, 5):
         choice_side = choice(possible_choice)
         another_side = right_group if choice_side == left_group else left_group
         sleep(randint(3, 7))
