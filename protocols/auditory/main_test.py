@@ -70,7 +70,7 @@ def auditory_simple_test():
     auditory_simple_familiarization(beeper, push_button_high)
     print('Teste iniciado!')
 
-    for _ in range(0, 8):
+    for _ in range(0, 20):
         sleep(1)
         wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()

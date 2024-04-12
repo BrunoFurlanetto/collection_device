@@ -19,11 +19,13 @@ def connect_esp(port):
 
 
 def main():
-    port = input('Insira a porta de comunicação com o ESP32: ')
+    port = input('Insira a porta de comunicação com o ESP32 (por padrão colocar "COM5"): ')
+    port = port if port.strip() != '' else 'COM5'
+    evaluator = input('Insira o nome do avaliador: ')
     connect_esp(port)
 
-    name = input('Digite o nome do voluntário: ').strip().replace(' ', '_')
-    get_test_files(port, name.lower().replace(' ', '_'))
+    voluntary_name = input('Digite o nome do voluntário: ').strip().replace(' ', '_')
+    get_test_files(port, voluntary_name.lower().replace(' ', '_'), evaluator.lower().replace(' ', '_'))
 
 
 if __name__ == "__main__":

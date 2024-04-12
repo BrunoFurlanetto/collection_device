@@ -4,6 +4,8 @@ from time import sleep
 
 
 def tactile_choice_familiarization(right_group, left_group, possible_choice):
+    print('Familiarização iniciada!')
+
     for _ in range(0, 3):
         choice_side = choice(possible_choice)
         another_side = right_group if choice_side == left_group else left_group
@@ -25,10 +27,13 @@ def tactile_choice_familiarization(right_group, left_group, possible_choice):
 
                 break
 
-    input('Pressione ENTER para iniciar o teste!')
+    print('Familiarização finalizada, aperte enter para iniciar o teste.')
+    input('Pessione ENTER para iniciar o teste!')
 
 
 def tactile_simple_familiarization(right, push_button):
+    print('Familiarização iniciada!')
+
     for _ in range(0, 3):
         sleep(randint(3, 7))
         count = utime.ticks_ms()
@@ -46,4 +51,5 @@ def tactile_simple_familiarization(right, push_button):
 
                 break
 
-    input('Pressione ENTER para iniciar o teste!')
+    print('Familiarização finalizada, aperte enter para iniciar o teste.')
+    input('Pessione ENTER para iniciar o teste!')

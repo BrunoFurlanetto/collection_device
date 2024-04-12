@@ -5,7 +5,7 @@ import utime
 
 
 def auditory_choice_familiarization(low_group, high_group, possible_choices):
-    print('Familiarização do teste auditivo iniciado.')
+    print('Familiarização iniciada!')
 
     for i in range(0, 3):
         choice_group = choice(possible_choices)
@@ -29,10 +29,13 @@ def auditory_choice_familiarization(low_group, high_group, possible_choices):
 
                 break
 
-    input('Familiarização finalizada, aperte enter para iniciar o teste.')
+    print('Familiarização finalizada, aperte enter para iniciar o teste.')
+    input('Pessione ENTER para iniciar o teste!')
 
 
 def auditory_simple_familiarization(beeper, push_button):
+    print('Familiarização iniciada!')
+
     for _ in range(0, 3):
         sleep(randint(3, 7))
 
@@ -51,4 +54,5 @@ def auditory_simple_familiarization(beeper, push_button):
 
                 break
 
+    print('Familiarização finalizada.')
     input('Pessione ENTER para iniciar o teste!')

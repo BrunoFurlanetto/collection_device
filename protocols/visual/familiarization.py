@@ -28,10 +28,13 @@ def visual_choice_familiarization(red_group, green_group, possible_choice):
 
                 break
 
-    input('Pressione ENTER para iniciar o teste.')
+    print('Familiarização finalizada, aperte enter para iniciar o teste.')
+    input('Pessione ENTER para iniciar o teste!')
 
 
 def visual_simple_familiarization(green_led, push_button):
+    print('Familiarização iniciada!')
+
     for _ in range(0, 3):
         sleep(randint(3, 7))
         count = utime.ticks_ms()
@@ -49,4 +52,5 @@ def visual_simple_familiarization(green_led, push_button):
 
                 break
 
-    input('Pressione ENTER para iniciar o teste!')
+    print('Familiarização finalizada, aperte enter para iniciar o teste.')
+    input('Pessione ENTER para iniciar o teste!')
