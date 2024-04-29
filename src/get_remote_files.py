@@ -1,4 +1,5 @@
 import subprocess
+from datetime import datetime
 
 from time import sleep
 
@@ -7,19 +8,18 @@ stimuli = ['visual', 'auditory', 'tactile']
 # get_test_files('com5', 'jota', 'jota')
 
 
-def get_test_files(port, voluntary_name, evaluator):
+def get_test_files(port, modality_initials):
     """
     Function responsible for taking the files from the microcontroller's memory and saving them in the local repository
     :param port: Communication port with the microcontroller
-    :param voluntary_name: Name of the volunteer to be in the filename
-    :param evaluator: Name of the evaluator administering the test
+    :param modality_initials: Initials of the volunteer modality
     :return: The function has no return
     """
     print('Processando os resultados obtidos...')
     sleep(1)
     for stimulus in stimuli:
         try:
-            command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_simple_test.dat results\\{stimulus}_simple_test_{voluntary_name}_evaluator_{evaluator}.dat'
+            command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_simple_test.dat results\\trs_{stimulus[0:1]}_{modality_initials}_{datetime.now()}.dat'
             result = subprocess.run(
                 command,
                 shell=True,
@@ -40,7 +40,7 @@ def get_test_files(port, voluntary_name, evaluator):
             print(f'Erro: {e}')
 
         try:
-            command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_choice_test.dat results\\{stimulus}_choice_test_{voluntary_name}_evaluator_{evaluator}.dat'
+            command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_choice_test.dat results\\tre_{stimulus[0:1]}_{modality_initials}_{datetime.now()}.dat'
             result = subprocess.run(
                 command,
                 capture_output=True,
