@@ -17,9 +17,11 @@ def get_test_files(port, modality_initials):
     """
     print('Processando os resultados obtidos...')
     sleep(1)
+    date = datetime.now().strftime('%Y-%m-%d_%H-%M')
+
     for stimulus in stimuli:
         try:
-            command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_simple_test.dat results\\trs_{stimulus[0:1]}_{modality_initials}_{datetime.now()}.dat'
+            command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_simple_test.dat results\\trs_{stimulus[0:1]}_{modality_initials}_{date}.dat'
             result = subprocess.run(
                 command,
                 shell=True,
@@ -40,7 +42,7 @@ def get_test_files(port, modality_initials):
             print(f'Erro: {e}')
 
         try:
-            command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_choice_test.dat results\\tre_{stimulus[0:1]}_{modality_initials}_{datetime.now()}.dat'
+            command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_choice_test.dat results\\tre_{stimulus[0:1]}_{modality_initials}_{date}.dat'
             result = subprocess.run(
                 command,
                 capture_output=True,

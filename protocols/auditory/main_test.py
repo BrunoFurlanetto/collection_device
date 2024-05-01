@@ -64,7 +64,10 @@ def auditory_choice_test():
 
                     break
                 elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                    choice_group[1].duty_u16(0)
                     results.append('DP')
+
+                    break
         else:
             results.append('AT')
 

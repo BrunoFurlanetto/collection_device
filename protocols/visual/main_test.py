@@ -63,7 +63,10 @@ def visual_choice_test():
 
                     break
                 elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
+                    choice_led[1].value(False)
                     results.append('DP')
+
+                    break
         else:
             results.append('AT')
 
