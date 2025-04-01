@@ -19,6 +19,7 @@ when the stimulus is presented and the device records the reaction time.
 - Connection to computer for programming
 - Python environment with microPython installed
 - Internet access to download dependencies
+- Python 3.10.5
 
 ## Installation
 **If you already have MicroPyton installed on your microcontroller and the scripts in the ESP32 
