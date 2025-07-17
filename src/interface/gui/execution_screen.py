@@ -5,112 +5,125 @@ import os
 from threading import Thread
 from time import sleep
 
+translate_senses = {
+    "Visual": "Visual",
+    "Auditory": "Auditivo",
+    "Tactile": "Tátil",
+}
 
-# Substitua estas funções pelos seus scripts reais de coleta e familiarização
-def executar_teste(via, tipo):
-    print(f"Iniciando teste {tipo} da via {via}...")
-    sleep(2)  # Simula tempo de execução do teste
+translate_types = {
+    "Simple": "Simples",
+    "Choice": "Escolha",
+}
 
 
-def familiarizacao(via, tipo):
-    print(f"Familiarização do teste {tipo} da via {via}...")
-    sleep(1)  # Simula tempo de execução da familiarização
+# Replace these functions with your actual collection and familiarization scripts
+def run_test(sense, test_type):
+    print(f"Starting {test_type} test for {sense} sense...")
+    sleep(2)  # Simulate test execution time
+
+
+def familiarization(sense, test_type):
+    print(f"Familiarization for {test_type} test of {sense} sense...")
+    sleep(1)  # Simulate familiarization time
 
 
 def start_execution_screen():
-    # Lê as configurações da sessão
+    # Read the session configurations
     config_path = os.path.join("src", "config", "session_config.json")
+
     if not os.path.exists(config_path):
-        print("Arquivo de configuração não encontrado.")
+        print("Arquivo de configurações não encontrada.")
         return
 
     with open(config_path, "r", encoding="utf-8") as f:
         config = json.load(f)
 
     root = tk.Tk()
-    root.title("Execução dos Testes")
+    root.title("Execução dos testes")
     root.geometry("600x400")
     root.resizable(False, False)
 
-    sense_order = config["ordem_vias"]
-    test_order = config["ordem_testes"]
+    sense_order = config["order_senses"]
+    test_order = config["order_tests"]
 
-    all_tests = [(sense, tipo) for sense in sense_order for tipo in test_order[sense]]
+    all_tests = [(sense, test_type) for sense in sense_order for test_type in test_order[sense]]
     total_tests = len(all_tests)
     current_index = tk.IntVar(value=0)
 
-    # Função para atualizar visualmente
+    # Function to update the visual display
     def update_current_test_label():
         i = current_index.get()
+
         if i < total_tests:
-            via, tipo = all_tests[i]
-            current_test_label.config(text=f"Teste atual: {via.upper()} - {tipo.upper()}")
-            remaining_tests_label.config(text=f"Testes restantes: {total_tests - i - 1}")
-            progress['value'] = ((i + 1) / total_tests) * 100
+            sense, test_type = all_tests[i]
+            current_test_label.config(text=f"Teste atual: {translate_senses[sense].upper()} - {translate_types[test_type].upper()}")
+            remaining_tests_label.config(text=f"Testes restantes: {total_tests - i}")
+            progress['value'] = (i / total_tests) * 100
         else:
-            current_test_label.config(text="Todos os testes foram concluídos.")
-            remaining_tests_label.config(text="Todos os testes concluídos!")
+            current_test_label.config(text="Todos os testes foram completados.")
+            remaining_tests_label.config(text="Testes completados!")
             progress['value'] = 100
 
-            # Desabilitar os botões após a conclusão
-            familiarizacao_button.config(state="disabled")
-            teste_button.config(state="disabled")
+            # Disable the buttons after completion
+            familiarization_button.config(state="disabled")
+            test_button.config(state="disabled")
 
-    def run_familiarizacao():
+    def run_familiarization():
         i = current_index.get()
 
         if i < total_tests:
-            via, tipo = all_tests[i]
-            Thread(target=familiarizacao, args=(via, tipo), daemon=True).start()
+            sense, test_type = all_tests[i]
+            Thread(target=familiarization, args=(sense, test_type), daemon=True).start()
 
-    def run_teste():
+    def run_test_sequence():
         i = current_index.get()
         if i >= total_tests:
             return
 
-        via, tipo = all_tests[i]
+        sense, test_type = all_tests[i]
 
         def exec_and_update():
-            executar_teste(via, tipo)
+            run_test(sense, test_type)
             current_index.set(i + 1)
             update_current_test_label()
 
         Thread(target=exec_and_update, daemon=True).start()
 
-    # Ordem dos testes
+    # Test order
     tk.Label(root, text="Ordem dos testes:", font=("Arial", 12, "bold")).pack(pady=5)
-    order_text = "\n".join([f"{i + 1}. {via.upper()} - {tipo.upper()}" for i, (via, tipo) in enumerate(all_tests)])
+    order_text = "\n".join([f"{i + 1}. {translate_senses[sense].upper()} - {translate_types[test_type].upper()}" for i, (sense, test_type) in enumerate(all_tests)])
     tk.Label(root, text=order_text, justify="left").pack()
 
-    # Progresso
+    # Progress bar
     progress = ttk.Progressbar(root, length=500, mode="determinate")
     progress.pack(pady=10)
     progress['maximum'] = 100
 
-    # Teste atual
+    # Current test label
     current_test_label = tk.Label(root, text="", font=("Arial", 11, "bold"))
     current_test_label.pack(pady=5)
 
-    # Testes restantes
+    # Remaining tests label
     remaining_tests_label = tk.Label(root, text="Testes restantes:", font=("Arial", 11))
     remaining_tests_label.pack(pady=5)
 
-    # Atualiza o label com o teste atual
+    # Update the label with the current test
     update_current_test_label()
 
-    # Botões
+    # Buttons
     button_frame = tk.Frame(root)
     button_frame.pack(pady=10)
 
-    # Botão para Familiarização
-    familiarizacao_button = tk.Button(button_frame, text="Familiarização", command=run_familiarizacao, width=20)
-    familiarizacao_button.pack(side="left", padx=10)
+    # Familiarization button
+    familiarization_button = tk.Button(button_frame, text="Familiarização", command=run_familiarization, width=20)
+    familiarization_button.pack(side="left", padx=10)
 
-    # Botão para Iniciar Teste
-    teste_button = tk.Button(button_frame, text="Iniciar Teste", command=run_teste, width=20)
-    teste_button.pack(side="left", padx=10)
+    # Start test button
+    test_button = tk.Button(button_frame, text="Iniciar teste", command=run_test_sequence, width=20)
+    test_button.pack(side="left", padx=10)
 
-    # Finalizar botão
-    tk.Button(button_frame, text="Finalizar Coleta", command=root.quit, width=20).pack(side="left", padx=10)
+    # Finish collection button
+    tk.Button(button_frame, text="Coleta finalizada", command=root.quit, width=20).pack(side="left", padx=10)
 
     root.mainloop()
