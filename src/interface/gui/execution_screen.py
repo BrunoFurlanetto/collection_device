@@ -32,11 +32,10 @@ def start_execution_screen():
     root.geometry("600x400")
     root.resizable(False, False)
 
-    sense_order = config["sense_order"]
-    test_order = config["test_order"]
+    sense_order = config["ordem_vias"]
+    test_order = config["ordem_testes"]
 
     all_tests = [(sense, tipo) for sense in sense_order for tipo in test_order[sense]]
-    print(all_tests)
     total_tests = len(all_tests)
     current_index = tk.IntVar(value=0)
 
@@ -46,8 +45,16 @@ def start_execution_screen():
         if i < total_tests:
             via, tipo = all_tests[i]
             current_test_label.config(text=f"Teste atual: {via.upper()} - {tipo.upper()}")
+            remaining_tests_label.config(text=f"Testes restantes: {total_tests - i - 1}")
+            progress['value'] = ((i + 1) / total_tests) * 100
         else:
             current_test_label.config(text="Todos os testes foram concluídos.")
+            remaining_tests_label.config(text="Todos os testes concluídos!")
+            progress['value'] = 100
+
+            # Desabilitar os botões após a conclusão
+            familiarizacao_button.config(state="disabled")
+            teste_button.config(state="disabled")
 
     def run_familiarizacao():
         i = current_index.get()
@@ -66,14 +73,13 @@ def start_execution_screen():
         def exec_and_update():
             executar_teste(via, tipo)
             current_index.set(i + 1)
-            progress['value'] = ((i + 1) / total_tests) * 100
             update_current_test_label()
 
         Thread(target=exec_and_update, daemon=True).start()
 
     # Ordem dos testes
     tk.Label(root, text="Ordem dos testes:", font=("Arial", 12, "bold")).pack(pady=5)
-    order_text = "\n".join([f"{i+1}. {via.upper()} - {tipo.upper()}" for i, (via, tipo) in enumerate(all_tests)])
+    order_text = "\n".join([f"{i + 1}. {via.upper()} - {tipo.upper()}" for i, (via, tipo) in enumerate(all_tests)])
     tk.Label(root, text=order_text, justify="left").pack()
 
     # Progresso
@@ -84,13 +90,27 @@ def start_execution_screen():
     # Teste atual
     current_test_label = tk.Label(root, text="", font=("Arial", 11, "bold"))
     current_test_label.pack(pady=5)
+
+    # Testes restantes
+    remaining_tests_label = tk.Label(root, text="Testes restantes:", font=("Arial", 11))
+    remaining_tests_label.pack(pady=5)
+
+    # Atualiza o label com o teste atual
     update_current_test_label()
 
     # Botões
     button_frame = tk.Frame(root)
     button_frame.pack(pady=10)
 
-    tk.Button(button_frame, text="Familiarização", command=run_familiarizacao).pack(side="left", padx=10)
-    tk.Button(button_frame, text="Iniciar Teste", command=run_teste).pack(side="left", padx=10)
+    # Botão para Familiarização
+    familiarizacao_button = tk.Button(button_frame, text="Familiarização", command=run_familiarizacao, width=20)
+    familiarizacao_button.pack(side="left", padx=10)
+
+    # Botão para Iniciar Teste
+    teste_button = tk.Button(button_frame, text="Iniciar Teste", command=run_teste, width=20)
+    teste_button.pack(side="left", padx=10)
+
+    # Finalizar botão
+    tk.Button(button_frame, text="Finalizar Coleta", command=root.quit, width=20).pack(side="left", padx=10)
 
     root.mainloop()
