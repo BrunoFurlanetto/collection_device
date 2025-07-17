@@ -20,9 +20,9 @@ def sortear_ordem_vias(via_order_vars):
 
 
 def sortear_ordem_testes(test_order_vars, via):
-    nova_ordem = random.sample(TESTES, len(TESTES))
+    new_order = random.sample(TESTES, len(TESTES))
 
-    for var, teste in zip(test_order_vars[via], nova_ordem):
+    for var, teste in zip(test_order_vars[via], new_order):
         var.set(teste)
 
 
@@ -94,7 +94,7 @@ def submit_data(porta, codigo, mao, root, via_order_vars, test_order_vars):
 
     try:
         os.makedirs("src/config", exist_ok=True)
-        with open("src/config/config.json", "w") as f:
+        with open("src/config/session_config.json", "w") as f:
             json.dump(config, f, indent=4)
 
         messagebox.showinfo("Sucesso", "Configuração salva com sucesso.")

@@ -19,7 +19,7 @@ def familiarizacao(via, tipo):
 
 def start_execution_screen():
     # Lê as configurações da sessão
-    config_path = os.path.join("src", "config", "config.json")
+    config_path = os.path.join("src", "config", "session_config.json")
     if not os.path.exists(config_path):
         print("Arquivo de configuração não encontrado.")
         return
