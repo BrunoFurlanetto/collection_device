@@ -4,6 +4,7 @@ import json
 import os
 from threading import Thread
 from time import sleep
+from src.serialcom.serial_command import send_test, send_familiarization
 
 translate_senses = {
     "Visual": "Visual",
@@ -19,13 +20,11 @@ translate_types = {
 
 # Replace these functions with your actual collection and familiarization scripts
 def run_test(sense, test_type):
-    print(f"Starting {test_type} test for {sense} sense...")
-    sleep(2)  # Simulate test execution time
+    return send_test(sense, test_type)
 
 
 def familiarization(sense, test_type):
-    print(f"Familiarization for {test_type} test of {sense} sense...")
-    sleep(1)  # Simulate familiarization time
+    return send_familiarization(sense, test_type)
 
 
 def start_execution_screen():
