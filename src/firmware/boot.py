@@ -1,4 +1,8 @@
 # This file is executed on every boot (including wake-boot from deepsleep)
+import uos
+
+uos.dupterm(None, 0)
+
 import json
 import sys
 import time

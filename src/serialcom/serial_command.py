@@ -46,7 +46,10 @@ def send_test(sense: str, test_type: str) -> str:
     """
     client = get_client()
     cmd = f"START_TEST:{sense},{test_type}"
-    return client.send_and_receive(cmd)
+    print('Foi')
+    resp = client.send_and_receive(cmd)
+    print(resp)
+    return resp
 
 
 def close_client():

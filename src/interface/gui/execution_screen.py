@@ -4,7 +4,7 @@ import json
 import os
 from threading import Thread
 from time import sleep
-from src.serialcom.serial_command import send_test, send_familiarization
+from src.serialcom.serial_command import send_test, send_familiarization, close_client
 
 translate_senses = {
     "Visual": "Visual",
@@ -20,11 +20,19 @@ translate_types = {
 
 # Replace these functions with your actual collection and familiarization scripts
 def run_test(sense, test_type):
-    return send_test(sense, test_type)
+    reponse = send_test(sense, test_type)
+    print(reponse)
+
+    return reponse
 
 
 def familiarization(sense, test_type):
     return send_familiarization(sense, test_type)
+
+
+def end_test(root):
+    close_client()
+    root.quit
 
 
 def start_execution_screen():
@@ -123,6 +131,6 @@ def start_execution_screen():
     test_button.pack(side="left", padx=10)
 
     # Finish collection button
-    tk.Button(button_frame, text="Coleta finalizada", command=root.quit, width=20).pack(side="left", padx=10)
+    tk.Button(button_frame, text="Coleta finalizada", command=end_test(root), width=20).pack(side="left", padx=10)
 
     root.mainloop()

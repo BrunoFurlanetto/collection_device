@@ -1,0 +1,4 @@
+Command 'python -m venv venv' returned non-zero exit status 1.: 2025-07-21 15:00:42.604757 
+Command 'venv\Scripts\pip install -r ..\requirements.txt' returned non-zero exit status 1.: 2025-07-21 15:00:42.604757 
+Command 'venv\Scripts\esptool.py --chip esp32 --port COM5 erase_flash' returned non-zero exit status 1.: 2025-07-21 15:00:42.604757 
+Command 'venv\Scripts\esptool.py --chip esp32 --port COM5 --baud 115200 write_flash -z 0x1000 config\esp32.bin' returned non-zero exit status 1.: 2025-07-21 15:00:42.604757 
