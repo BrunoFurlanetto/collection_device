@@ -1,3 +1,6 @@
+import subprocess
+import sys
+import time
 import tkinter as tk
 from tkinter import ttk
 import os
@@ -5,8 +8,11 @@ import json
 import random
 from tkinter import messagebox
 
+import serial
+
 from src.interface.gui.ports_config import configure_ports
 from src.interface.gui.execution_screen import start_execution_screen
+from src.serialcom.serial_command import soft_reset_esp
 
 SENSORY_MODES = ['Visual', 'Auditory', 'Tactile']
 TEST_TYPES = ['Simple', 'Choice']
@@ -41,18 +47,21 @@ def create_order_interface(frame):
         ttk.OptionMenu(frame, via_order_vars[i], SENSORY_MODES[i], *SENSORY_MODES).grid(row=1, column=i, pady=5, padx=5)
 
     ttk.Button(frame, text="Sortear ordem", command=lambda: shuffle_sensory_order(via_order_vars)).grid(row=1,
-                                                                                                                column=len(SENSORY_MODES),
-                                                                                                                padx=10, pady=10)
+                                                                                                        column=len(
+                                                                                                            SENSORY_MODES),
+                                                                                                        padx=10,
+                                                                                                        pady=10)
 
     row_offset = 2
     for idx, via in enumerate(SENSORY_MODES):
         ttk.Label(frame, text=f"{via} - Ordem dos testes:").grid(row=row_offset, column=0, columnspan=4, pady=5,
-                                                           sticky='w')
+                                                                 sticky='w')
 
         for j in range(len(TEST_TYPES)):
             test_order_vars[via][j].set(TEST_TYPES[j])
-            ttk.OptionMenu(frame, test_order_vars[via][j], TEST_TYPES[j], *TEST_TYPES).grid(row=row_offset + 1, column=j,
-                                                                                             pady=5, padx=5)
+            ttk.OptionMenu(frame, test_order_vars[via][j], TEST_TYPES[j], *TEST_TYPES).grid(row=row_offset + 1,
+                                                                                            column=j,
+                                                                                            pady=5, padx=5)
 
         ttk.Button(frame, text="Sortear testes", command=lambda v=via: shuffle_test_order(test_order_vars, v)).grid(
             row=row_offset + 1, column=len(TEST_TYPES), padx=10, pady=10)
@@ -85,15 +94,14 @@ def validate_entries(port, code, hand):
 # Function to submit data to the configuration file
 def submit_data(port, code, hand, root, via_order_vars, test_order_vars):
     if not validate_entries(port, code, hand):
-
         return  # Stop execution if validation fails
 
     config = {
-        "port": port.get(),
-        "participant_code": code.get(),
-        "dominant_hand": hand.get(),
-        "order_senses": [var.get() for var in via_order_vars],
-        "order_tests": {
+        "PORT": port.get(),
+        "PARTICIPANT_CODE": code.get().strip().upper(),
+        "DOMINANT_HAND": hand.get()[0],
+        "ORDER_SENSES": [var.get() for var in via_order_vars],
+        "ORDER_TESTS": {
             via: [var.get() for var in test_order_vars[via]]
             for via in SENSORY_MODES
         }
@@ -107,9 +115,74 @@ def submit_data(port, code, hand, root, via_order_vars, test_order_vars):
 
         messagebox.showinfo("Sucesso", "Configurações salvas com sucesso.")
         root.destroy()
+        send_config_to_esp()
         start_execution_screen()
     except Exception as e:
         messagebox.showerror("Erro", f"Ocorreu um erro durante o salvamento das configurações: {e}")
+
+
+def send_config_to_esp():
+    # 1) lê o JSON salvo
+    base = os.path.dirname(__file__)  # .../src/interface/gui
+    cfg = os.path.abspath(os.path.join(base, '..', '..', 'config', 'session_config.json'))
+    ports_cfg = os.path.abspath(os.path.join(base, '..', '..', 'config', 'ports_config.json'))
+
+    try:
+        with open(cfg, 'r', encoding='utf-8') as f:
+            session = json.load(f)
+    except Exception as e:
+        messagebox.showerror("Erro", f"Não consegui ler {cfg}: {e}")
+        return
+
+    port = session.get('PORT')
+
+    if not port:
+        messagebox.showerror("Erro", "Não achei a chave 'port' no JSON")
+        return
+
+    # 2) localiza o ampy.exe no venv
+    #    sys.executable é .../venv/Scripts/python.exe
+    scripts_dir = os.path.dirname(sys.executable)
+
+    if sys.platform.startswith('win'):
+        ampy_exe = os.path.join(scripts_dir, 'ampy.exe')
+    else:
+        ampy_exe = os.path.join(scripts_dir, 'ampy')  # num *nix seria venv/bin/ampy
+
+    if not os.path.isfile(ampy_exe):
+        messagebox.showerror("Erro", f"Não achei o ampy em {ampy_exe}\nInstale com pip install adafruit-ampy")
+
+        return
+
+    # 4) envia o arquivo
+    put_session_config_cmd = [
+        ampy_exe, '--port', port,
+        'put', cfg, 'config/session_config.json'
+    ]
+
+    put_ports_config_cmd = [
+        ampy_exe, '--port', port,
+        'put', cfg, 'config/session_config.json'
+    ]
+
+    try:
+        subprocess.run(put_session_config_cmd, check=True)
+        messagebox.showinfo("Sucesso", "Configurações da seção enviado ao ESP!")
+    except subprocess.CalledProcessError as e:
+        messagebox.showerror("Erro de envio", f"Falhou ao executar:\n{e.cmd}\n{e}")
+
+    try:
+        subprocess.run(put_ports_config_cmd, check=True)
+        messagebox.showinfo("Sucesso", "Configurações das portas enviado ao ESP!")
+    except subprocess.CalledProcessError as e:
+        messagebox.showerror("Erro de envio", f"Falhou ao executar:\n{e.cmd}\n{e}")
+
+    reset_esp = [
+        ampy_exe, '--port', port,
+        'reset'
+    ]
+
+    soft_reset_esp()
 
 
 # Initial screen function

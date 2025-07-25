@@ -6,14 +6,14 @@ import os
 
 # Default port values
 DEFAULT_CONFIG = {
-    "right_buzzer": 18,
-    "left_buzzer": 32,
-    "right_vibracall": 5,
-    "left_vibracall": 33,
-    "right_push_button": 19,
-    "left_push_button": 12,
-    "right_led": 2,
-    "left_led": 14
+    "RIGHT_BUZZER": 18,
+    "LEFT_BUZZER": 32,
+    "RIGHT_VIBRACALL": 5,
+    "LEFT_VIBRACALL": 33,
+    "RIGHT_PUSH_BUTTON": 19,
+    "LEFT_PUSH_BUTTON": 12,
+    "RIGHT_LED": 2,
+    "LEFT_LED": 14
 }
 
 
@@ -41,28 +41,28 @@ def save_config(config):
 def reset_to_default(entries):
     # Set all entries to the default values
     entries['right_buzzer'].delete(0, tk.END)
-    entries['right_buzzer'].insert(0, DEFAULT_CONFIG["right_buzzer"])
+    entries['right_buzzer'].insert(0, DEFAULT_CONFIG["RIGHT_BUZZER"])
 
     entries['left_buzzer'].delete(0, tk.END)
-    entries['left_buzzer'].insert(0, DEFAULT_CONFIG["left_buzzer"])
+    entries['left_buzzer'].insert(0, DEFAULT_CONFIG["LEFT_BUZZER"])
 
     entries['right_vibracall'].delete(0, tk.END)
-    entries['right_vibracall'].insert(0, DEFAULT_CONFIG["right_vibracall"])
+    entries['right_vibracall'].insert(0, DEFAULT_CONFIG["RIGHT_VIBRACALL"])
 
     entries['left_vibracall'].delete(0, tk.END)
-    entries['left_vibracall'].insert(0, DEFAULT_CONFIG["left_vibracall"])
+    entries['left_vibracall'].insert(0, DEFAULT_CONFIG["LEFT_VIBRACALL"])
 
     entries['right_push_button'].delete(0, tk.END)
-    entries['right_push_button'].insert(0, DEFAULT_CONFIG["right_push_button"])
+    entries['right_push_button'].insert(0, DEFAULT_CONFIG["RIGHT_PUSH_BUTTON"])
 
     entries['left_push_button'].delete(0, tk.END)
-    entries['left_push_button'].insert(0, DEFAULT_CONFIG["left_push_button"])
+    entries['left_push_button'].insert(0, DEFAULT_CONFIG["LEFT_PUSH_BUTTON"])
 
     entries['right_led'].delete(0, tk.END)
-    entries['right_led'].insert(0, DEFAULT_CONFIG["right_led"])
+    entries['right_led'].insert(0, DEFAULT_CONFIG["RIGHT_LED"])
 
     entries['left_led'].delete(0, tk.END)
-    entries['left_led'].insert(0, DEFAULT_CONFIG["left_led"])
+    entries['left_led'].insert(0, DEFAULT_CONFIG["LEFT_LED"])
 
     messagebox.showinfo("Reset", "As portas foram resetadas para o padrão.")
 
@@ -76,14 +76,14 @@ def configure_ports():
     def save():
         # Collect the values entered by the user
         try:
-            config["right_buzzer"] = int(right_buzzer_entry.get())
-            config["left_buzzer"] = int(left_buzzer_entry.get())
-            config["right_vibracall"] = int(right_vibracall_entry.get())
-            config["left_vibracall"] = int(left_vibracall_entry.get())
-            config["right_push_button"] = int(right_push_button_entry.get())
-            config["left_push_button"] = int(left_push_button_entry.get())
-            config["right_led"] = int(right_led_entry.get())
-            config["left_led"] = int(left_led_entry.get())
+            config["RIGHT_BUZZER"] = int(right_buzzer_entry.get())
+            config["LEFT_BUZZER"] = int(left_buzzer_entry.get())
+            config["RIGHT_VIBRACALL"] = int(right_vibracall_entry.get())
+            config["LEFT_VIBRACALL"] = int(left_vibracall_entry.get())
+            config["RIGHT_PUSH_BUTTON"] = int(right_push_button_entry.get())
+            config["LEFT_PUSH_BUTTON"] = int(left_push_button_entry.get())
+            config["RIGHT_LED"] = int(right_led_entry.get())
+            config["LEFT_LED"] = int(left_led_entry.get())
 
             # Save the configuration to the file
             save_config(config)
@@ -116,52 +116,52 @@ def configure_ports():
     warning_text.pack()
 
     # Labels and entries for each port configuration (arranged in 2 columns)
-    ttk.Label(grid_frame, text="Buzzer esquerdo:").grid(row=0, column=0, padx=5, pady=5, sticky='w')
+    ttk.Label(grid_frame, text="Buzzer direito:").grid(row=0, column=0, padx=5, pady=5, sticky='w')
     right_buzzer_entry = ttk.Entry(grid_frame)
     right_buzzer_entry.grid(row=0, column=1, padx=5, pady=5)
-    right_buzzer_entry.insert(0, config["right_buzzer"])
+    right_buzzer_entry.insert(0, config["RIGHT_BUZZER"])
     entries['right_buzzer'] = right_buzzer_entry
 
     ttk.Label(grid_frame, text="Buzzer esquerdo:").grid(row=1, column=0, padx=5, pady=5, sticky='w')
     left_buzzer_entry = ttk.Entry(grid_frame)
     left_buzzer_entry.grid(row=1, column=1, padx=5, pady=5)
-    left_buzzer_entry.insert(0, config["left_buzzer"])
+    left_buzzer_entry.insert(0, config["LEFT_BUZZER"])
     entries['left_buzzer'] = left_buzzer_entry
 
     ttk.Label(grid_frame, text="Vibracall direito:").grid(row=2, column=0, padx=5, pady=5, sticky='w')
     right_vibracall_entry = ttk.Entry(grid_frame)
     right_vibracall_entry.grid(row=2, column=1, padx=5, pady=5)
-    right_vibracall_entry.insert(0, config["right_vibracall"])
+    right_vibracall_entry.insert(0, config["RIGHT_VIBRACALL"])
     entries['right_vibracall'] = right_vibracall_entry
 
     ttk.Label(grid_frame, text="Vibracall esquerdo:").grid(row=3, column=0, padx=5, pady=5, sticky='w')
     left_vibracall_entry = ttk.Entry(grid_frame)
     left_vibracall_entry.grid(row=3, column=1, padx=5, pady=5)
-    left_vibracall_entry.insert(0, config["left_vibracall"])
+    left_vibracall_entry.insert(0, config["LEFT_VIBRACALL"])
     entries['left_vibracall'] = left_vibracall_entry
 
     ttk.Label(grid_frame, text="Push Button direito:").grid(row=4, column=0, padx=5, pady=5, sticky='w')
     right_push_button_entry = ttk.Entry(grid_frame)
     right_push_button_entry.grid(row=4, column=1, padx=5, pady=5)
-    right_push_button_entry.insert(0, config["right_push_button"])
+    right_push_button_entry.insert(0, config["RIGHT_PUSH_BUTTON"])
     entries['right_push_button'] = right_push_button_entry
 
     ttk.Label(grid_frame, text="Push Button esquerdo:").grid(row=5, column=0, padx=5, pady=5, sticky='w')
     left_push_button_entry = ttk.Entry(grid_frame)
     left_push_button_entry.grid(row=5, column=1, padx=5, pady=5)
-    left_push_button_entry.insert(0, config["left_push_button"])
+    left_push_button_entry.insert(0, config["LEFT_PUSH_BUTTON"])
     entries['left_push_button'] = left_push_button_entry
 
     ttk.Label(grid_frame, text="LED direito:").grid(row=6, column=0, padx=5, pady=5, sticky='w')
     right_led_entry = ttk.Entry(grid_frame)
     right_led_entry.grid(row=6, column=1, padx=5, pady=5)
-    right_led_entry.insert(0, config["right_led"])
+    right_led_entry.insert(0, config["RIGHT_LED"])
     entries['right_led'] = right_led_entry
 
     ttk.Label(grid_frame, text="LED esquerdo:").grid(row=7, column=0, padx=5, pady=5, sticky='w')
     left_led_entry = ttk.Entry(grid_frame)
     left_led_entry.grid(row=7, column=1, padx=5, pady=5)
-    left_led_entry.insert(0, config["left_led"])
+    left_led_entry.insert(0, config["LEFT_LED"])
     entries['left_led'] = left_led_entry
 
     # Save, Cancel, and Reset buttons
