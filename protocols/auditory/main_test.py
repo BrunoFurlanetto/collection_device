@@ -1,3 +1,5 @@
+import json
+
 import uasyncio as asyncio
 from machine import Pin, PWM
 from time import sleep
@@ -25,24 +27,30 @@ def auditory_choice_test():
         • WS - Wrong side and
         • AT - Anticipated
     """
-    low_beeper = PWM(Pin(32, Pin.OUT), freq=500, duty_u16=0)
-    high_beeper = PWM(Pin(18, Pin.OUT), freq=500, duty_u16=0)
-    push_button_low = Pin(12, Pin.IN)
-    push_button_high = Pin(19, Pin.IN)
-    low_group = [push_button_low, low_beeper]
-    high_group = [push_button_high, high_beeper]
-    possible_choices = [low_group, high_group]
+    with open('config/ports_config.json', 'r') as f:
+        PORTS_CONFIG = json.load(f)
+
+    port_right_beeper = PORTS_CONFIG['RIGHT_BUZZER']
+    port_left_beeper = PORTS_CONFIG['LEFT_BUZZER']
+    port_right_button = PORTS_CONFIG['RIGHT_PUSH_BUTTON']
+    port_left_button = PORTS_CONFIG['LEFT_PUSH_BUTTON']
+    left_beeper = PWM(Pin(port_left_beeper, Pin.OUT), freq=500, duty_u16=0)
+    right_beeper = PWM(Pin(port_right_beeper, Pin.OUT), freq=500, duty_u16=0)
+    push_button_left = Pin(port_left_button, Pin.IN)
+    push_button_right = Pin(port_right_button, Pin.IN)
+    left_group = [push_button_left, left_beeper]
+    right_group = [push_button_right, right_beeper]
+    possible_choices = [left_group, right_group]
     results = []
-    auditory_choice_familiarization(low_group, high_group, possible_choices)
     print('Teste iniciado!')
 
     for _ in range(0, 20):
         sleep(1)
         choice_group = choice(possible_choices)
-        another_beeper = low_group if choice_group == high_group else high_group
+        another_beeper = left_group if choice_group == right_group else right_group
         wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
-        anticipated = anticipation_test(wait_time_start, wait_time, push_button_high, push_button_low)
+        anticipated = anticipation_test(wait_time_start, wait_time, push_button_right, push_button_left)
 
         if not anticipated:
             count = start_time = utime.ticks_ms()
@@ -72,8 +80,11 @@ def auditory_choice_test():
             results.append('AT')
 
     save_data('auditory_choice_test.dat', results)
-    low_beeper.deinit()
-    high_beeper.deinit()
+    print('Teste finalizado com sucesso!')
+    left_beeper.deinit()
+    right_beeper.deinit()
+
+    return
 
 
 def auditory_simple_test():
@@ -91,24 +102,31 @@ def auditory_simple_test():
         • DP - Didn't press
         • AT - Anticipated
     """
-    beeper = PWM(Pin(18, Pin.OUT), freq=500, duty_u16=0)
-    push_button_high = Pin(19, Pin.IN)
+    with open('config/ports_config.json', 'r') as f:
+        PORTS_CONFIG = json.load(f)
+
+    with open('config/session_config.json', 'r') as f:
+        SESSION_CONFIG = json.load(f)
+
+    port_beeper = PORTS_CONFIG['RIGHT_BUZZER'] if SESSION_CONFIG['DOMINANT_HAND'] == 'D' else PORTS_CONFIG['LEFT_BUZZER']
+    port_push_button = PORTS_CONFIG['RIGHT_PUSH_BUTTON'] if SESSION_CONFIG['DOMINANT_HAND'] == 'D' else PORTS_CONFIG['LEFT_PUSH_BUTTON']
+    beeper = PWM(Pin(port_beeper, Pin.OUT), freq=500, duty_u16=0)
+    push_button = Pin(port_push_button, Pin.IN)
     results = []
-    auditory_simple_familiarization(beeper, push_button_high)
     print('Teste iniciado!')
 
     for _ in range(0, 20):
         sleep(1)
         wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
-        anticipated = anticipation_test(wait_time_start, wait_time, push_button_high)
+        anticipated = anticipation_test(wait_time_start, wait_time, push_button)
 
         if not anticipated:
             count = start_time = utime.ticks_ms()
             beeper.duty_u16(50)
 
             while True:
-                success_state = push_button_high.value()
+                success_state = push_button.value()
 
                 if success_state:
                     end_time = utime.ticks_ms()
@@ -126,5 +144,6 @@ def auditory_simple_test():
 
     save_data('auditory_simple_test.dat', results)
     beeper.deinit()
+    print('Teste finalizado com sucesso!')
 
     return
