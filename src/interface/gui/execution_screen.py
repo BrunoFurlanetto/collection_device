@@ -9,15 +9,10 @@ from src.get_remote_files import get_test_files
 from src.interface.gui.temp_messages import TempAlert
 from src.serialcom.serial_command import ESPSerialClient
 
-translate_senses = {
-    "Visual": "Visual",
-    "Auditory": "Auditivo",
-    "Tactile": "Tátil",
-}
 
 translate_types = {
-    "Simple": "Simples",
-    "Choice": "Escolha",
+    "Simples": "Simple",
+    "Escolha": "Choice",
 }
 
 
@@ -84,7 +79,7 @@ class TestExecutionScreen:
         self.end_button.pack(side="left", padx=10)
 
     def create_test_order_label(self, sense_order, test_order):
-        order_text = "\n".join([f"{i + 1}. {translate_senses[sense].upper()} - {translate_types[test_type].upper()}" for i, (sense, test_type) in enumerate(self.all_tests)])
+        order_text = "\n".join([f"{i + 1}. {sense.upper()} - {test_type.upper()}" for i, (sense, test_type) in enumerate(self.all_tests)])
         tk.Label(self.root, text=order_text, justify="left").pack()
 
     def create_progress_bar(self):
@@ -97,7 +92,7 @@ class TestExecutionScreen:
 
         if i < self.total_tests:
             sense, test_type = self.all_tests[i]
-            self.current_test_label.config(text=f"Teste atual: {translate_senses[sense].upper()} - {translate_types[test_type].upper()}")
+            self.current_test_label.config(text=f"Teste atual: {sense.upper()} - {test_type.upper()}")
             self.remaining_tests_label.config(text=f"Testes restantes: {self.total_tests - i}")
             self.progress['value'] = (i / self.total_tests) * 100
         else:
@@ -122,7 +117,7 @@ class TestExecutionScreen:
 
         def exec_familiarization():
             self._disable_all_buttons()
-            self.ser.send_command_and_wait(self.root, f'F{sense.upper()[0]}{test_type.upper()[0]}')
+            self.ser.send_command_and_wait(self.root, f'F{sense.upper()[0]}{translate_types[test_type].upper()[0]}')
             self._enable_all_buttons()
 
         if i < self.total_tests:
@@ -139,7 +134,7 @@ class TestExecutionScreen:
 
         def exec_and_update():
             self._disable_all_buttons()
-            self.ser.send_command_and_wait(self.root, f'T{sense.upper()[0]}{test_type.upper()[0]}')
+            self.ser.send_command_and_wait(self.root, f'T{sense.upper()[0]}{translate_types[test_type].upper()[0]}')
             self._enable_all_buttons()
             self.current_index.set(i + 1)
             self.update_current_test_label()
@@ -153,10 +148,6 @@ class TestExecutionScreen:
         self.root.config(cursor="watch")
         self.root.update_idletasks()
 
-        # 2) mostra alerta – já ligado ao mainloop da sua janela
-
-
-        # 3) dispara o trabalho pesado em background
         Thread(target=self._retrieve_and_close, daemon=True).start()
 
     def _retrieve_and_close(self):
@@ -165,8 +156,10 @@ class TestExecutionScreen:
         get_test_files(self.root)
 
         def on_done():
-            self.root.config(cursor="")      # cursor normal
-            self.root.quit()
+            self.root.config(cursor="")
+            self.root.destroy()
+            from src.interface.gui.initial_screen import initial_screen
+            initial_screen()
 
         self.root.after(0, on_done)
 

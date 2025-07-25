@@ -26,7 +26,7 @@ def get_test_files(master):
     participant_code = SESSION_CONFIG['PARTICIPANT_CODE'].lower()
 
     for stimulus in stimuli:
-        print(stimulus)
+
         try:
             command = f'venv\\Scripts\\ampy -p {port} get {stimulus}_simple_test.dat results\\trs_{stimulus[0:1]}_{participant_code}_{date}.dat'
             result = subprocess.run(

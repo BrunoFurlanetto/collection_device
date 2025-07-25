@@ -1,6 +1,6 @@
 import subprocess
 import sys
-import time
+
 import tkinter as tk
 from tkinter import ttk
 import os
@@ -8,14 +8,14 @@ import json
 import random
 from tkinter import messagebox
 
-import serial
-
+from src.graph.main import ReactionTimeAnalyzer
 from src.interface.gui.ports_config import configure_ports
 from src.interface.gui.execution_screen import start_execution_screen
 from src.serialcom.serial_command import soft_reset_esp
 
-SENSORY_MODES = ['Visual', 'Auditory', 'Tactile']
-TEST_TYPES = ['Simple', 'Choice']
+
+SENSORY_MODES = ['Visual', 'Auditivo', 'Tátil']
+TEST_TYPES = ['Simples', 'Escolha']
 
 
 def shuffle_sensory_order(via_order_vars):
@@ -46,11 +46,12 @@ def create_order_interface(frame):
         via_order_vars[i].set(SENSORY_MODES[i])
         ttk.OptionMenu(frame, via_order_vars[i], SENSORY_MODES[i], *SENSORY_MODES).grid(row=1, column=i, pady=5, padx=5)
 
-    ttk.Button(frame, text="Sortear ordem", command=lambda: shuffle_sensory_order(via_order_vars)).grid(row=1,
-                                                                                                        column=len(
-                                                                                                            SENSORY_MODES),
-                                                                                                        padx=10,
-                                                                                                        pady=10)
+    ttk.Button(frame, text="Sortear ordem", command=lambda: shuffle_sensory_order(via_order_vars)).grid(
+        row=1,
+        column=len(SENSORY_MODES),
+        padx=10,
+        pady=10
+    )
 
     row_offset = 2
     for idx, via in enumerate(SENSORY_MODES):
@@ -59,9 +60,12 @@ def create_order_interface(frame):
 
         for j in range(len(TEST_TYPES)):
             test_order_vars[via][j].set(TEST_TYPES[j])
-            ttk.OptionMenu(frame, test_order_vars[via][j], TEST_TYPES[j], *TEST_TYPES).grid(row=row_offset + 1,
-                                                                                            column=j,
-                                                                                            pady=5, padx=5)
+            ttk.OptionMenu(frame, test_order_vars[via][j], TEST_TYPES[j], *TEST_TYPES).grid(
+                row=row_offset + 1,
+                column=j,
+                pady=5,
+                padx=5
+            )
 
         ttk.Button(frame, text="Sortear testes", command=lambda v=via: shuffle_test_order(test_order_vars, v)).grid(
             row=row_offset + 1, column=len(TEST_TYPES), padx=10, pady=10)
@@ -199,6 +203,12 @@ def initial_screen():
     config_menu = tk.Menu(menubar, tearoff=0)
     config_menu.add_command(label="Configuração das portas", command=configure_ports)
     menubar.add_cascade(label="Configurações", menu=config_menu)
+
+    # Results menu
+    results_menu = tk.Menu(menubar, tearoff=0)
+    results_menu.add_command(label="Graficar resultados", command=lambda: _open_analyzer(root))
+    menubar.add_cascade(label="Resultados", menu=results_menu)
+
     root.config(menu=menubar)
 
     # Initial data frame
@@ -233,3 +243,9 @@ def initial_screen():
         pady=10)
 
     root.mainloop()
+
+
+def _open_analyzer(master):
+    # Open the Reaction Time Analyzer in a Toplevel window
+    win = tk.Toplevel(master)
+    ReactionTimeAnalyzer(win)
