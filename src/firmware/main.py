@@ -1,6 +1,5 @@
 import sys
 import uselect
-from utils.command_parser import parse_command
 
 from protocols.auditory.familiarization import auditory_choice_familiarization, auditory_simple_familiarization
 from protocols.auditory.main_test import auditory_choice_test, auditory_simple_test

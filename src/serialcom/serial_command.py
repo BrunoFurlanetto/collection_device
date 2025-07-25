@@ -1,62 +1,112 @@
 import json
-import os
-from .serial_client import SerialClient
+import time
+import serial
+
+from src.interface.gui.temp_messages import TempAlert
 
 
-# Singleton client instance
-def _load_serial_client():
-    cfg_path = os.path.join('src', 'config', 'session_config.json')
-    if not os.path.exists(cfg_path):
-        raise FileNotFoundError(f"Session config not found at {cfg_path}")
-
-    with open(cfg_path, 'r', encoding='utf-8') as f:
-        cfg = json.load(f)
-
-    port = cfg.get('port')
-    if not port:
-        raise KeyError("`port` not found in session_config.json")
-
-    # Instantiate client
-    client = SerialClient(port)
-    return client
-
-
-_serial_client = None
-
-
-def get_client():
-    global _serial_client
-    if _serial_client is None:
-        _serial_client = _load_serial_client()
-    return _serial_client
-
-
-def send_familiarization(sense: str, test_type: str) -> str:
+class ESPSerialClient:
     """
-    Sends a familiarization command to the ESP32 and returns its response.
+    Client for sending commands to ESP32 over serial and waiting for responses.
     """
-    client = get_client()
-    cmd = f"START_FAMILIARIZATION:{sense},{test_type}"
-    return client.send_and_receive(cmd)
+    def __init__(self, config_path='src/config/session_config.json', baud=115200):
+        """
+        :param config_path: Path to the JSON file with 'PORT' key.
+        :param baud: Baud rate for the serial connection.
+        """
+        self.baud = baud
+        self.port = self._load_port(config_path)
+        self.ser = None
+
+    @staticmethod
+    def _load_port(config_path):
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                cfg = json.load(f)
+            return cfg['PORT']
+        except Exception as e:
+            raise RuntimeError(f"Failed to load port from {config_path}: {e}")
+
+    def open(self):
+        """Open the serial connection."""
+        if self.ser and self.ser.is_open:
+
+            return
+        try:
+            self.ser = serial.Serial(port=self.port, baudrate=self.baud, timeout=1)
+            time.sleep(2)
+            self.ser.reset_input_buffer()
+            self.ser.reset_output_buffer()
+        except serial.SerialException as e:
+            raise RuntimeError(f"Unable to open serial port {self.port}: {e}")
+
+    def close(self):
+        """Close the serial connection."""
+        if self.ser and self.ser.is_open:
+            self.ser.close()
+
+    def send_command_and_wait(self, master, command, success_resp='SUCCESS', retry_on_unknown=True, max_retries=5, read_interval=0.1):
+        """
+        Send a command to the ESP and wait for a specific success response.
+
+        :param command: Command string (no newline appended).
+        :param success_resp: The response indicating success.
+        :param retry_on_unknown: If True, retry command when receiving UNKNOWN_COMMAND.
+        :param max_retries: Max number of retries on unknown command.
+        :param read_interval: Delay between read attempts.
+        :return: (successful, list_of_responses)
+        """
+        if not self.ser or not self.ser.is_open:
+            self.open()
+
+        responses = []
+        retries = 0
+        cmd = command.strip()
+
+        # send first time
+        self.ser.write(cmd.encode('utf-8'))
+        self.ser.flush()
+
+        while True:
+            line = self.ser.readline().decode('utf-8', errors='ignore').strip()
+
+            if line:
+                if retry_on_unknown and line == 'ERROR:UNKNOWN_COMMAND':
+                    retries += 1
+
+                    if retries > max_retries:
+
+                        break
+                    # retry sending
+                    self.ser.write(cmd.encode('utf-8'))
+                    self.ser.flush()
+                    time.sleep(read_interval)
+
+                    continue
+                else:
+                    responses.append(line)
+
+                    if line == success_resp:
+                        return True, responses
+
+                    TempAlert(master, line)
+            else:
+                time.sleep(read_interval)
+
+        return False, responses
 
 
-def send_test(sense: str, test_type: str) -> str:
+def soft_reset_esp():
     """
-    Sends a start-test command to the ESP32 and returns its response.
+    Envia Ctrl-D para forçar um soft reboot do MicroPython no ESP32.
+    Funciona porque no REPL o Ctrl-D faz um soft reset.
     """
-    client = get_client()
-    cmd = f"START_TEST:{sense},{test_type}"
-    print('Foi')
-    resp = client.send_and_receive(cmd)
-    print(resp)
-    return resp
+    with open('src/config/session_config.json', 'r', encoding='utf-8') as f:
+        session = json.load(f)
 
-
-def close_client():
-    """
-    Closes the underlying serial connection.
-    """
-    global _serial_client
-    if _serial_client:
-        _serial_client.close()
-        _serial_client = None
+    port = session.get('PORT')
+    ser = serial.Serial(port, baudrate=115200, timeout=1)
+    time.sleep(0.1)  # deixa a porta estabilizar
+    ser.write(b'\x04')  # Ctrl-D
+    ser.flush()
+    ser.close()
