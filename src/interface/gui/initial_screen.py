@@ -102,7 +102,7 @@ def submit_data(port, code, hand, root, via_order_vars, test_order_vars):
 
     config = {
         "PORT": port.get(),
-        "PARTICIPANT_CODE": code.get().strip().upper(),
+        "PARTICIPANT_CODE": code.get().strip().replace(' ', '_').upper(),
         "DOMINANT_HAND": hand.get()[0],
         "ORDER_SENSES": [var.get() for var in via_order_vars],
         "ORDER_TESTS": {
