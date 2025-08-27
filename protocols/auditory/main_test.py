@@ -10,6 +10,26 @@ from protocols.auditory.familiarization import auditory_choice_familiarization, 
 from protocols.utils.utils import reaction_time, save_data, anticipation_test
 
 
+def safe_buzzer_init(port):
+    pin = Pin(port, Pin.OUT)
+    pin.value(0)
+    sleep(0.01)
+    pwm = PWM(pin, freq=500, duty_u16=0)
+    sleep(0.01)
+
+    return pwm
+
+
+def safe_buzzer_cleanup(buzzer, port):
+    """
+    Limpeza segura do buzzer
+    """
+    buzzer.duty_u16(0)
+    sleep(0.01)
+    buzzer.deinit()
+    Pin(port, Pin.OUT).value(0)
+
+
 def auditory_choice_test():
     """
     20 stimuli are made with a time interval between them at random, ranging from 3 to 7 seconds. The volunteer must
@@ -34,8 +54,8 @@ def auditory_choice_test():
     port_left_beeper = PORTS_CONFIG['LEFT_BUZZER']
     port_right_button = PORTS_CONFIG['RIGHT_PUSH_BUTTON']
     port_left_button = PORTS_CONFIG['LEFT_PUSH_BUTTON']
-    left_beeper = PWM(Pin(port_left_beeper, Pin.OUT), freq=500, duty_u16=0)
-    right_beeper = PWM(Pin(port_right_beeper, Pin.OUT), freq=500, duty_u16=0)
+    left_beeper = safe_buzzer_init(port_left_beeper)
+    right_beeper = safe_buzzer_init(port_right_beeper)
     push_button_left = Pin(port_left_button, Pin.IN)
     push_button_right = Pin(port_right_button, Pin.IN)
     left_group = [push_button_left, left_beeper]
@@ -81,8 +101,8 @@ def auditory_choice_test():
 
     save_data('auditory_choice_test.dat', results)
     print('Teste finalizado com sucesso!')
-    left_beeper.deinit()
-    right_beeper.deinit()
+    safe_buzzer_cleanup(left_beeper, port_left_beeper)
+    safe_buzzer_cleanup(right_beeper, port_right_beeper)
 
     return
 
@@ -110,7 +130,7 @@ def auditory_simple_test():
 
     port_beeper = PORTS_CONFIG['RIGHT_BUZZER'] if SESSION_CONFIG['DOMINANT_HAND'] == 'D' else PORTS_CONFIG['LEFT_BUZZER']
     port_push_button = PORTS_CONFIG['RIGHT_PUSH_BUTTON'] if SESSION_CONFIG['DOMINANT_HAND'] == 'D' else PORTS_CONFIG['LEFT_PUSH_BUTTON']
-    beeper = PWM(Pin(port_beeper, Pin.OUT), freq=500, duty_u16=0)
+    beeper = safe_buzzer_init(port_beeper)
     push_button = Pin(port_push_button, Pin.IN)
     results = []
     print('Teste iniciado!')
@@ -143,7 +163,7 @@ def auditory_simple_test():
             results.append('AT')
 
     save_data('auditory_simple_test.dat', results)
-    beeper.deinit()
+    safe_buzzer_cleanup(beeper, port_beeper)
     print('Teste finalizado com sucesso!')
 
     return
