@@ -1,5 +1,7 @@
 @echo off
+pushd "%~dp0%"
 
-python src/main.py
+REM inicia sem console
+start "" "%~dp0\venv\Scripts\pythonw.exe" -m src.main
 
-pause
+exit

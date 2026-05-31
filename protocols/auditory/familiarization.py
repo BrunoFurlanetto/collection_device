@@ -1,15 +1,52 @@
+import json
 from random import randint, choice
 from time import sleep
 
 import utime
+from machine import PWM, Pin
 
 
-def auditory_choice_familiarization(low_group, high_group, possible_choices):
+def safe_buzzer_init(port):
+    pin = Pin(port, Pin.OUT)
+    pin.value(0)
+    sleep(0.01)
+    pwm = PWM(pin, freq=500, duty_u16=0)
+    sleep(0.01)
+
+    return pwm
+
+
+def safe_buzzer_cleanup(buzzer, port):
+    """
+    Limpeza segura do buzzer
+    """
+    buzzer.duty_u16(0)
+    sleep(0.01)
+    buzzer.deinit()
+    Pin(port, Pin.OUT).value(0)
+
+
+def auditory_choice_familiarization():
     print('Familiarização iniciada!')
+
+    with open('config/ports_config.json', 'r') as f:
+        PORTS_CONFIG = json.load(f)
+
+    port_right_beeper = PORTS_CONFIG['RIGHT_BUZZER']
+    port_left_beeper = PORTS_CONFIG['LEFT_BUZZER']
+    port_right_button = PORTS_CONFIG['RIGHT_PUSH_BUTTON']
+    port_left_button = PORTS_CONFIG['LEFT_PUSH_BUTTON']
+    left_beeper = safe_buzzer_init(port_left_beeper)
+    right_beeper = safe_buzzer_init(port_right_beeper)
+    push_button_left = Pin(port_left_button, Pin.IN)
+    push_button_right = Pin(port_right_button, Pin.IN)
+    left_group = [push_button_left, left_beeper]
+    right_group = [push_button_right, right_beeper]
+    possible_choices = [left_group, right_group]
 
     for i in range(0, 5):
         choice_group = choice(possible_choices)
-        another_beeper = low_group if choice_group == high_group else high_group
+        another_beeper = left_group if choice_group == right_group else right_group
         sleep(randint(3, 7))
 
         count = start_time = utime.ticks_ms()
@@ -29,12 +66,24 @@ def auditory_choice_familiarization(low_group, high_group, possible_choices):
 
                 break
 
-    print('Familiarização finalizada, aperte enter para iniciar o teste.')
-    input('Pessione ENTER para iniciar o teste!')
+    safe_buzzer_cleanup(left_beeper, port_left_beeper)
+    safe_buzzer_cleanup(right_beeper, port_right_beeper)
+    print('Familiarização finalizada com sucesso!')
 
 
-def auditory_simple_familiarization(beeper, push_button):
+def auditory_simple_familiarization():
     print('Familiarização iniciada!')
+
+    with open('config/ports_config.json', 'r') as f:
+        PORTS_CONFIG = json.load(f)
+
+    with open('config/session_config.json', 'r') as f:
+        SESSION_CONFIG = json.load(f)
+
+    port_beeper = PORTS_CONFIG['RIGHT_BUZZER'] if SESSION_CONFIG['DOMINANT_HAND'] == 'D' else PORTS_CONFIG['LEFT_BUZZER']
+    port_push_button = PORTS_CONFIG['RIGHT_PUSH_BUTTON'] if SESSION_CONFIG['DOMINANT_HAND'] == 'D' else PORTS_CONFIG['LEFT_PUSH_BUTTON']
+    beeper = safe_buzzer_init(port_beeper)
+    push_button = Pin(port_push_button, Pin.IN)
 
     for _ in range(0, 3):
         sleep(randint(3, 7))
@@ -54,5 +103,5 @@ def auditory_simple_familiarization(beeper, push_button):
 
                 break
 
-    print('Familiarização finalizada.')
-    input('Pessione ENTER para iniciar o teste!')
+    safe_buzzer_cleanup(beeper, port_beeper)
+    print('Familiarização finalizada com sucesso!')

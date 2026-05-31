@@ -1,3 +1,5 @@
+import json
+
 from machine import Pin
 from time import sleep
 from random import randint, choice
@@ -24,15 +26,22 @@ def tactile_choice_test():
         • WS - Wrong side and
         • AT - Anticipated
     """
-    left = Pin(33, Pin.OUT)
-    right = Pin(5, Pin.OUT)
-    push_button_left = Pin(12, Pin.IN)
-    push_button_right = Pin(19, Pin.IN)
+    with open('config/ports_config.json', 'r') as f:
+        PORTS_CONFIG = json.load(f)
+
+    port_right = PORTS_CONFIG['RIGHT_VIBRACALL']
+    port_left = PORTS_CONFIG['LEFT_VIBRACALL']
+    port_right_button = PORTS_CONFIG['RIGHT_PUSH_BUTTON']
+    port_left_button = PORTS_CONFIG['LEFT_PUSH_BUTTON']
+
+    left = Pin(port_left, Pin.OUT)
+    right = Pin(port_right, Pin.OUT)
+    push_button_left = Pin(port_left_button, Pin.IN)
+    push_button_right = Pin(port_right_button, Pin.IN)
     left_group = [push_button_left, left]
     right_group = [push_button_right, right]
     possible_choice = [right_group, left_group]
     results = []
-    tactile_choice_familiarization(left_group, right_group, possible_choice)
     print('Teste iniciado!')
 
     for _ in range(0, 20):
@@ -71,6 +80,7 @@ def tactile_choice_test():
             results.append('AT')
 
     save_data('tactile_choice_test.dat', results)
+    print('Teste finalizado com sucesso!')
 
     return
 
@@ -91,33 +101,41 @@ def tactile_simple_test():
         • DP - Didn't press
         • AT - Anticipated
     """
-    right = Pin(5, Pin.OUT)
-    push_button_right = Pin(19, Pin.IN)
+    with open('config/ports_config.json', 'r') as f:
+        PORTS_CONFIG = json.load(f)
+
+    with open('config/session_config.json', 'r') as f:
+        SESSION_CONFIG = json.load(f)
+
+    port_vibracall = PORTS_CONFIG['RIGHT_VIBRACALL'] if SESSION_CONFIG['DOMINANT_HAND'] == 'D' else PORTS_CONFIG['LEFT_VIBRACALL']
+    port_push_button = PORTS_CONFIG['RIGHT_PUSH_BUTTON'] if SESSION_CONFIG['DOMINANT_HAND'] == 'D' else PORTS_CONFIG['LEFT_PUSH_BUTTON']
+
+    vibracall = Pin(port_vibracall, Pin.OUT)
+    push_button = Pin(port_push_button, Pin.IN)
     results = []
-    tactile_simple_familiarization(right, push_button_right)
     print('Teste iniciado!')
 
     for _ in range(0, 20):
         sleep(1)
         wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
-        anticipated = anticipation_test(wait_time_start, wait_time, push_button_right)
+        anticipated = anticipation_test(wait_time_start, wait_time, push_button)
 
         if not anticipated:
             count = start_time = utime.ticks_ms()
-            right.value(True)
+            vibracall.value(True)
 
             while True:
-                success_state = push_button_right.value()
+                success_state = push_button.value()
 
                 if success_state:
                     end_time = utime.ticks_ms()
-                    right.value(0)
+                    vibracall.value(0)
                     results.append(reaction_time(start_time, end_time))
 
                     break
                 elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
-                    right.value(False)
+                    vibracall.value(False)
                     results.append('DP')
 
                     break
@@ -125,5 +143,6 @@ def tactile_simple_test():
             results.append('AT')
 
     save_data('tactile_simple_test.dat', results)
+    print('Teste finalizado com sucesso!')
 
     return

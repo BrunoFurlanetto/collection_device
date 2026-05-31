@@ -1,3 +1,5 @@
+import json
+
 from machine import Pin
 from time import sleep
 from random import randint, choice
@@ -24,24 +26,31 @@ def visual_choice_test():
         • WS - Wrong side and
         • AT - Anticipated
     """
-    red_led = Pin(2, Pin.OUT)
-    green_led = Pin(14, Pin.OUT)
-    push_button_red = Pin(19, Pin.IN)
-    push_button_green = Pin(12, Pin.IN)
-    red_group = [push_button_red, red_led]
-    green_group = [push_button_green, green_led]
-    possible_choice = [red_group, green_group]
+    with open('config/ports_config.json', 'r') as f:
+        PORTS_CONFIG = json.load(f)
+
+    port_right_led = PORTS_CONFIG['RIGHT_LED']
+    port_left_led = PORTS_CONFIG['LEFT_LED']
+    port_right_button = PORTS_CONFIG['RIGHT_PUSH_BUTTON']
+    port_left_button = PORTS_CONFIG['LEFT_PUSH_BUTTON']
+
+    right_led = Pin(port_right_led, Pin.OUT)
+    left_led = Pin(port_left_led, Pin.OUT)
+    push_button_right = Pin(port_right_button, Pin.IN)
+    push_button_left = Pin(port_left_button, Pin.IN)
+    right_group = [push_button_right, right_led]
+    left_group = [push_button_left, left_led]
+    possible_choice = [right_group, left_group]
     results = []
-    visual_choice_familiarization(red_group, green_group, possible_choice)
     print('Teste iniciado!')
 
     for _ in range(0, 20):
         sleep(1)
         choice_led = choice(possible_choice)
-        another_led = red_group if choice_led == green_group else green_group
+        another_led = right_group if choice_led == left_group else left_group
         wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
-        anticipated = anticipation_test(wait_time_start, wait_time, push_button_red, push_button_green)
+        anticipated = anticipation_test(wait_time_start, wait_time, push_button_right, push_button_left)
 
         if not anticipated:
             start_time = count = utime.ticks_ms()
@@ -71,6 +80,7 @@ def visual_choice_test():
             results.append('AT')
 
     save_data('visual_choice_test.dat', results)
+    print('Teste finalizado com sucesso!')
 
     return
 
@@ -90,33 +100,40 @@ def visual_simple_test():
         • DP - Didn't press
         • AT - Anticipated
     """
-    green_led = Pin(14, Pin.OUT)  # TODO: Change after board replacement to port 14
-    push_button_green = Pin(19, Pin.IN)
+    with open('config/ports_config.json', 'r') as f:
+        PORTS_CONFIG = json.load(f)
+
+    with open('config/session_config.json', 'r') as f:
+        SESSION_CONFIG = json.load(f)
+
+    port_led = PORTS_CONFIG['LEFT_LED']
+    port_push_button = PORTS_CONFIG['RIGHT_PUSH_BUTTON'] if SESSION_CONFIG['DOMINANT_HAND'] == 'D' else PORTS_CONFIG['LEFT_PUSH_BUTTON']
+    led = Pin(port_led, Pin.OUT)  # TODO: Change after board replacement to port 14
+    push_button = Pin(port_push_button, Pin.IN)
     results = []
-    visual_simple_familiarization(green_led, push_button_green)
     print('Teste iniciado!')
 
     for _ in range(0, 20):
         sleep(1)
         wait_time = randint(2, 6) * 1000
         wait_time_start = utime.ticks_ms()
-        anticipated = anticipation_test(wait_time_start, wait_time, push_button_green)
+        anticipated = anticipation_test(wait_time_start, wait_time, push_button)
 
         if not anticipated:
             count = start_time = utime.ticks_ms()
-            green_led.value(True)
+            led.value(True)
 
             while True:
-                success_state = push_button_green.value()
+                success_state = push_button.value()
 
                 if success_state:
                     end_time = utime.ticks_ms()
-                    green_led.value(False)
+                    led.value(False)
                     results.append(reaction_time(start_time, end_time))
 
                     break
                 elif utime.ticks_diff(utime.ticks_ms(), count) > 2000:
-                    green_led.value(False)
+                    led.value(False)
                     results.append('DP')
 
                     break
@@ -124,5 +141,6 @@ def visual_simple_test():
             results.append('AT')
 
     save_data('visual_simple_test.dat', results)
+    print('Teste finalizado com sucesso!')
 
     return
