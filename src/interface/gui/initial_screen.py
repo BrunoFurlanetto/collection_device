@@ -9,6 +9,7 @@ import random
 from tkinter import messagebox
 
 from src.graph.main import ReactionTimeAnalyzer
+from src.interface.gui.debug_screen import DebugScreen
 from src.interface.gui.ports_config import configure_ports
 from src.interface.gui.execution_screen import start_execution_screen
 from src.serialcom.serial_command import soft_reset_esp
@@ -202,6 +203,7 @@ def initial_screen():
     menubar = tk.Menu(root)
     config_menu = tk.Menu(menubar, tearoff=0)
     config_menu.add_command(label="Configuração das portas", command=configure_ports)
+    config_menu.add_command(label="Debug do dispositivo", command=lambda: DebugScreen(port_var.get()))
     menubar.add_cascade(label="Configurações", menu=config_menu)
 
     # Results menu
